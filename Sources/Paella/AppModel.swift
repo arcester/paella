@@ -51,6 +51,7 @@ final class AppModel {
     private(set) var sudoersInstalled = PrivilegeHelper.isInstalled
     private(set) var watchdogInstalled = LaunchAgent.isInstalled
     var message: String?
+    var settingsTab = "general" // "Ajustes…" resets it so the window never reopens on the last tab used
 
     private var controller: ThermalController
     private let reader = HIDThermalReader()
@@ -65,9 +66,10 @@ final class AppModel {
 
     var menuLabel: String {
         guard let s = sample else { return "–°" }
-        let t = UserDefaults.standard.string(forKey: Key.menuBarTemp) == "max" ? s.dieMax : s.dieSmoothed
-        var label = "\(Int(t.rounded()))°"
-        if lowPowerModeEngaged && LowPowerMode.isEnabled { label += " Ahorro" } else if throttling && duty < 1 { label += " ▼\(Int((duty * 100).rounded()))%" }
+        let mode = UserDefaults.standard.string(forKey: Key.menuBarTemp)
+        let t = mode == "max" ? s.dieMax : s.dieSmoothed
+        var label = mode == "pan" ? "" : "\(Int(t.rounded()))°" // "pan": the icon stands in for the number
+        if lowPowerModeEngaged && LowPowerMode.isEnabled { label += " " + String(localized: "Ahorro") } else if throttling && duty < 1 { label += " ▼\(Int((duty * 100).rounded()))%" }
         if s.usingFallback { label += " ⚠︎" }
         return label
     }
@@ -214,7 +216,7 @@ final class AppModel {
         controller.reset()
         targets = []
         for i in monitored.indices where monitored[i].state == .limited { monitored[i].state = .normal }
-        message = "Límites quitados. El control automático está desactivado."
+        message = String(localized: "Límites quitados. El control automático está desactivado.")
     }
 
     /// "Ilimitado": remembered by name in the exclusions setting, so it also applies next time.
@@ -238,12 +240,12 @@ final class AppModel {
     }
 
     func installSudoers() {
-        message = PrivilegeHelper.install().map { "Error al instalar: \($0)" }
+        message = PrivilegeHelper.install().map { String(localized: "Error al instalar: \($0)") }
         sudoersInstalled = PrivilegeHelper.isInstalled
     }
 
     func removeSudoers() {
-        message = PrivilegeHelper.uninstall().map { "Error al quitar: \($0)" }
+        message = PrivilegeHelper.uninstall().map { String(localized: "Error al quitar: \($0)") }
         sudoersInstalled = PrivilegeHelper.isInstalled
         if !sudoersInstalled { UserDefaults.standard.set(false, forKey: Key.lpmFallback) }
     }
@@ -251,7 +253,7 @@ final class AppModel {
     func setWatchdog(_ on: Bool) {
         if on {
             guard let exe = Bundle.main.executablePath, Bundle.main.bundlePath.hasSuffix(".app") else {
-                message = "El vigilante necesita la app empaquetada (scripts/bundle.sh)."
+                message = String(localized: "El vigilante necesita la app empaquetada (scripts/bundle.sh).")
                 return
             }
             do {
@@ -259,7 +261,7 @@ final class AppModel {
                 // launchd now starts its own instance; hand over to it.
                 if !LaunchAgent.isLaunchedByAgent { NSApp.terminate(nil) }
             } catch {
-                message = "Error al instalar el vigilante: \(error.localizedDescription)"
+                message = String(localized: "Error al instalar el vigilante: \(error.localizedDescription)")
             }
         } else {
             // Booting out our own job would SIGTERM us; just remove the plist then (it is gone at next login).
@@ -274,7 +276,7 @@ final class AppModel {
             do {
                 if newValue { try SMAppService.mainApp.register() } else { try SMAppService.mainApp.unregister() }
             } catch {
-                message = "Abrir al iniciar sesión: \(error.localizedDescription)"
+                message = String(localized: "Abrir al iniciar sesión: \(error.localizedDescription)")
             }
         }
     }

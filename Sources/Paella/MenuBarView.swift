@@ -4,12 +4,17 @@ import SwiftUI
 
 struct PaellaApp: App {
     @State private var model = AppModel(dryRun: CommandLine.arguments.contains("--dry-run"))
+    @AppStorage(Key.menuBarTemp) private var menuBarIcon = "smoothed"
 
     var body: some Scene {
         MenuBarExtra {
             MenuBarView(model: model)
         } label: {
-            Text(model.menuLabel).monospacedDigit()
+            if menuBarIcon == "pan" {
+                Image(nsImage: .paellaTemplate)
+                    .accessibilityLabel("Paella")
+            }
+            Text(model.menuLabel.trimmingCharacters(in: .whitespaces)).monospacedDigit()
         }
         .menuBarExtraStyle(.window)
 
@@ -17,6 +22,33 @@ struct PaellaApp: App {
             SettingsView(model: model)
         }
     }
+}
+
+extension NSImage {
+    /// Monochrome pan for the menu bar: rim, sloped wall, handles; the rice is a lighter fill.
+    static let paellaTemplate: NSImage = {
+        let img = NSImage(size: NSSize(width: 22, height: 16), flipped: true) { _ in
+            NSColor.black.setFill()
+            let wall = NSBezierPath(ovalIn: NSRect(x: 5.5, y: 7.5, width: 11, height: 4))
+            wall.append(NSBezierPath(rect: NSRect(x: 5.5, y: 7, width: 11, height: 2.5)))
+            wall.fill()
+            NSBezierPath(ovalIn: NSRect(x: 3, y: 4, width: 16, height: 6.5)).fill()
+            NSGraphicsContext.current?.compositingOperation = .clear
+            NSBezierPath(ovalIn: NSRect(x: 4.5, y: 5.2, width: 13, height: 4.1)).fill()
+            NSGraphicsContext.current?.compositingOperation = .sourceOver
+            NSColor.black.withAlphaComponent(0.45).setFill()
+            NSBezierPath(ovalIn: NSRect(x: 4.5, y: 5.2, width: 13, height: 4.1)).fill()
+            NSColor.black.setStroke()
+            for x in [0.6, 18.4] {
+                let h = NSBezierPath(ovalIn: NSRect(x: x, y: 5.6, width: 3, height: 2.6))
+                h.lineWidth = 1.3
+                h.stroke()
+            }
+            return true
+        }
+        img.isTemplate = true
+        return img
+    }()
 }
 
 struct MenuBarView: View {
@@ -67,6 +99,7 @@ struct MenuBarView: View {
                 Button("Ajustes…") {
                     NSApp.keyWindow?.close() // the menu panel is key while open
                     NSApp.activate() // menu bar apps must come forward or the window opens behind others
+                    model.settingsTab = "general"
                     openSettings()
                 }
                 if model.dryRun { Text("SIMULACIÓN").font(.caption.bold()).foregroundStyle(.orange) }
@@ -92,7 +125,7 @@ struct MenuBarView: View {
                             .foregroundStyle(.orange)
                             .help("Ningún sensor HID coincide con los filtros; se usa el estado térmico de macOS")
                     } else {
-                        Text(model.sample.map { "máx. chip \(dec($0.dieMax)) °C · \($0.matchedSensors) sensores" } ?? " ")
+                        Text(model.sample.map { String(localized: "máx. chip \(dec($0.dieMax)) °C · \($0.matchedSensors) sensores") } ?? " ")
                     }
                     Text(status.text).foregroundStyle(status.color)
                 }
@@ -102,14 +135,14 @@ struct MenuBarView: View {
     }
 
     private var status: (text: String, color: Color) {
-        if !enabled { return ("Control automático desactivado", .secondary) }
-        if model.lowPowerModeEngaged { return ("Modo de bajo consumo (último recurso)", .red) }
+        if !enabled { return (String(localized: "Control automático desactivado"), .secondary) }
+        if model.lowPowerModeEngaged { return (String(localized: "Modo de bajo consumo (último recurso)"), .red) }
         if model.throttling && !model.targets.isEmpty {
             return model.duty < 1
-                ? ("Limitados al \(percent(model.duty)) del tiempo", .orange)
-                : ("Limitados a los núcleos de eficiencia", .orange)
+                ? (String(localized: "Limitados al \(percent(model.duty)) del tiempo"), .orange)
+                : (String(localized: "Limitados a los núcleos de eficiencia"), .orange)
         }
-        return ("Nada limitado", .green)
+        return (String(localized: "Nada limitado"), .green)
     }
 
     private var sparkline: some View {
@@ -145,7 +178,7 @@ struct MenuBarView: View {
         .foregroundStyle(.secondary)
     }
 
-    private func legendItem(_ title: String, _ color: some ShapeStyle, dashed: Bool = false) -> some View {
+    private func legendItem(_ title: LocalizedStringKey, _ color: some ShapeStyle, dashed: Bool = false) -> some View {
         HStack(spacing: 4) {
             Path { $0.move(to: CGPoint(x: 0, y: 1)); $0.addLine(to: CGPoint(x: 14, y: 1)) }
                 .stroke(color, style: StrokeStyle(lineWidth: 2, dash: dashed ? [3, 3] : []))
@@ -157,40 +190,40 @@ struct MenuBarView: View {
     // MARK: Explanations
 
     private var targetCaption: String {
-        let now = model.sample.map { " Ahora: \(dec($0.dieSmoothed, 0)) °C." } ?? ""
-        return "Temperatura media que la app intenta no superar.\(now)"
+        let base = String(localized: "Temperatura media que la app intenta no superar.")
+        return model.sample.map { base + " " + String(localized: "Ahora: \(dec($0.dieSmoothed, 0)) °C.") } ?? base
     }
 
     private var targetInfo: String {
         let t = Int(target)
         let eCores = eCoresFirst
-            ? "• Desde \(t - 2) °C: los procesos pesados pasan a los núcleos de eficiencia (más lentos y fríos).\n"
+            ? String(localized: "• Desde \(t - 2) °C: los procesos pesados pasan a los núcleos de eficiencia (más lentos y fríos).") + "\n"
             : ""
-        return """
+        return String(localized: """
         Se mide la temperatura más alta del chip y se promedia durante ~1 minuto: el calor del chasis depende de la potencia sostenida, no de los picos de unos segundos.
 
         • Por debajo de \(t - 2) °C: no se limita nada.
         \(eCores)• Por encima de \(t) °C: además se pausan a intervalos, más cuanto más se supere.
 
         Más alto = más rendimiento y chasis más caliente. Más bajo = más fresco y más lento.
-        """
+        """)
     }
 
     private var dutyCaption: String {
         dutyMin >= 0.999
-            ? "Los procesos nunca se pausan; solo se pasan a los núcleos de eficiencia."
-            : "Un proceso limitado funcionará al menos el \(percent(dutyMin)) del tiempo: como mucho \(dec(1 / dutyMin)) veces más lento."
+            ? String(localized: "Los procesos nunca se pausan; solo se pasan a los núcleos de eficiencia.")
+            : String(localized: "Un proceso limitado funcionará al menos el \(percent(dutyMin)) del tiempo: como mucho \(dec(1 / dutyMin)) veces más lento.")
     }
 
     private var dutyInfo: String {
-        let ms = Int((period * 1000).rounded())
-        return """
+        let ms = Int((clamp(period, Limits.period) * 1000).rounded())
+        return String(localized: """
         Para enfriar sin cerrar nada, la app pausa y reanuda los procesos pesados muchas veces por segundo: en cada ciclo de \(ms) ms funcionan una parte y están pausados el resto. Esa parte es el ciclo de trabajo, y la app la ajusta sola cada 2 s según la temperatura.
 
         Este ajuste es el suelo: por mucho calor que haga, nunca baja de \(percent(dutyMin)). Solo importa si, incluso en el mínimo, la temperatura sigue por encima del objetivo (verás ▼\(percent(dutyMin)) fijo en la barra de menús).
 
         Más bajo = más frío pero el trabajo tarda más. Más alto = avanza más rápido pero se calienta más. El paso a núcleos de eficiencia se suma a esto, así que la ralentización real puede ser mayor.
-        """
+        """)
     }
 
     // MARK: Process list
@@ -217,7 +250,7 @@ struct MenuBarView: View {
                 HStack(spacing: 8) {
                     VStack(alignment: .leading, spacing: 0) {
                         Text(m.group.name).lineLimit(1)
-                        Text(m.active ? usage(m.group) : "Sin actividad ahora")
+                        Text(m.active ? usage(m.group) : String(localized: "Sin actividad ahora"))
                             .font(.caption2).foregroundStyle(.secondary).monospacedDigit()
                     }
                     Spacer()
@@ -227,7 +260,7 @@ struct MenuBarView: View {
                         set: { model.setUnlimited(m.group, $0) }))
                         .labelsHidden().toggleStyle(.switch).controlSize(.mini).tint(.green)
                         .disabled(m.state == .system)
-                        .help(m.state == .system ? "Componente del sistema: nunca se limita" : "Ilimitado: nunca se limitará (se recuerda por nombre)")
+                        .help(m.state == .system ? String(localized: "Componente del sistema: nunca se limita") : String(localized: "Ilimitado: nunca se limitará (se recuerda por nombre)"))
                 }
                 .frame(height: Self.rowHeight)
             }
@@ -247,11 +280,11 @@ struct MenuBarView: View {
 
     private func badgeText(_ s: ProcessState) -> String {
         switch s {
-        case .limited: model.duty < 1 ? "Limitado \(percent(model.duty))" : "Limitado"
-        case .unlimited: "Ilimitado"
-        case .foreground: "Primer plano"
-        case .system: "Sistema"
-        case .normal: "Sin limitar"
+        case .limited: model.duty < 1 ? String(localized: "Limitado \(percent(model.duty))") : String(localized: "Limitado")
+        case .unlimited: String(localized: "Ilimitado")
+        case .foreground: String(localized: "Primer plano")
+        case .system: String(localized: "Sistema")
+        case .normal: String(localized: "Sin limitar")
         }
     }
 
@@ -267,9 +300,9 @@ struct MenuBarView: View {
 
 func percent(_ x: Double) -> String { "\(Int((x * 100).rounded())) %" }
 
-/// Spanish decimal comma: 68,2.
+/// Decimal in the user's locale: 68,2 / 68.2.
 func dec(_ x: Double, _ digits: Int = 1) -> String {
-    x.formatted(.number.precision(.fractionLength(digits)).locale(Locale(identifier: "es_ES")))
+    x.formatted(.number.precision(.fractionLength(digits)))
 }
 
 /// Reports whether the hosting window (the menu) is on screen.
@@ -328,7 +361,7 @@ private struct StateBadge: View {
 }
 
 private struct LabeledSlider: View {
-    let title: String
+    let title: LocalizedStringKey
     @Binding var value: Double
     let range: ClosedRange<Double>
     let step: Double

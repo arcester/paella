@@ -19,7 +19,7 @@ enum Key {
     static let gpuThreshold = "gpuThreshold"
     static let sensorFilters = "sensorFilters"
     static let sensorExcludes = "sensorExcludes"
-    static let menuBarTemp = "menuBarTemperature" // "smoothed" | "max"
+    static let menuBarTemp = "menuBarTemperature" // "smoothed" | "max" | "pan"
     static let savedLPM = "savedLowPowerMode" // user's LPM state while the last-resort stage is engaged
 
     static var defaults: [String: Any] { [
@@ -30,6 +30,17 @@ enum Key {
         sensorFilters: HIDThermalReader.defaultFilters.joined(separator: ", "),
         sensorExcludes: HIDThermalReader.defaultExcludes.joined(separator: ", "),
     ] }
+}
+
+/// Safe ranges for the advanced settings: the sliders offer only these, and reads are clamped to them
+/// too, so a hand-edited default (`defaults write`) can't stall the controller or flood signals either.
+enum Limits {
+    static let kp = 0.02...0.3
+    static let ki = 0.0...0.002
+    static let tau = 10.0...180
+    static let period = 0.1...1
+    static let cpuThreshold = 0.3...4
+    static let gpuThreshold = 0.05...1
 }
 
 struct Settings {
@@ -45,9 +56,10 @@ struct Settings {
             enabled: d.bool(forKey: Key.enabled), leaveFrontmost: d.bool(forKey: Key.leaveFrontmost),
             eCoresFirst: d.bool(forKey: Key.eCoresFirst), lpmFallback: d.bool(forKey: Key.lpmFallback),
             target: d.double(forKey: Key.target), dutyMin: min(max(d.double(forKey: Key.dutyMin), 0.1), 1),
-            kp: d.double(forKey: Key.kp), ki: d.double(forKey: Key.ki), tau: max(d.double(forKey: Key.tau), 1),
-            period: d.double(forKey: Key.period), cpuThreshold: d.double(forKey: Key.cpuThreshold),
-            gpuThreshold: d.double(forKey: Key.gpuThreshold),
+            kp: clamp(d.double(forKey: Key.kp), Limits.kp), ki: clamp(d.double(forKey: Key.ki), Limits.ki),
+            tau: clamp(d.double(forKey: Key.tau), Limits.tau), period: clamp(d.double(forKey: Key.period), Limits.period),
+            cpuThreshold: clamp(d.double(forKey: Key.cpuThreshold), Limits.cpuThreshold),
+            gpuThreshold: clamp(d.double(forKey: Key.gpuThreshold), Limits.gpuThreshold),
             exclusions: list(Key.exclusions), knownGPU: list(Key.knownGPU),
             sensorFilters: list(Key.sensorFilters), sensorExcludes: list(Key.sensorExcludes))
     }
@@ -58,3 +70,5 @@ struct Settings {
         return c
     }
 }
+
+func clamp(_ v: Double, _ r: ClosedRange<Double>) -> Double { min(max(v, r.lowerBound), r.upperBound) }
