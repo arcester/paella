@@ -19,6 +19,7 @@ struct SettingsView: View {
 private struct GeneralSettings: View {
     @Bindable var model: AppModel
     @AppStorage(Key.tempUnit) private var tempUnit = "auto"
+    @AppStorage(Key.appearance) private var appearance = "system"
     @AppStorage(Key.leaveFrontmost) private var leaveFrontmost = true
     @AppStorage(Key.eCoresFirst) private var eCoresFirst = true
     @AppStorage(Key.lpmFallback) private var lpmFallback = false
@@ -31,6 +32,14 @@ private struct GeneralSettings: View {
                     Text("Vigilante")
                     Text("Si la app se cierra a la fuerza, macOS la vuelve a abrir y reanuda al instante los procesos que estuvieran pausados. Al activarlo, la app se reinicia bajo launchd.")
                 }
+            }
+            Section("Apariencia") {
+                Picker("Aspecto", selection: $appearance) {
+                    Text("Según el sistema").tag("system")
+                    Text("Claro").tag("light")
+                    Text("Oscuro").tag("dark")
+                }
+                .onChange(of: appearance) { applyAppearance() }
             }
             Section("Unidades") {
                 Picker("Temperatura", selection: $tempUnit) {
@@ -69,6 +78,7 @@ private struct MenuSettings: View {
     @AppStorage(Key.refreshInterval) private var refreshInterval = 10.0
     @AppStorage(Key.listMinCPU) private var listMinCPU = 0.05
     @AppStorage(Key.listMinGPU) private var listMinGPU = 0.02
+    @AppStorage(Key.listWindow) private var listWindow = 10.0
 
     private var menuBarDetail: String {
         switch menuBarTemp {
@@ -102,9 +112,11 @@ private struct MenuSettings: View {
                 SliderRow(title: "Cada", detail: "Cada cuánto entran y salen procesos de la lista", value: $refreshInterval,
                           range: Limits.refreshInterval, step: 5) { "\(Int($0)) s" }
                     .disabled(!autoRefresh)
-                SliderRow(title: "Mínimo de CPU", detail: "Uso de CPU a partir del cual un proceso aparece en la lista", value: $listMinCPU,
+                SliderRow(title: "Media de", detail: "La lista ordena los procesos por su uso medio en este tiempo, no por el del momento",
+                          value: $listWindow, range: Limits.listWindow, step: 1) { "\(Int($0)) min" }
+                SliderRow(title: "Mínimo de CPU", detail: "Uso medio de CPU a partir del cual un proceso aparece en la lista", value: $listMinCPU,
                           range: Limits.listMinCPU, step: 0.01) { String(localized: "\(Int(($0 * 100).rounded())) % de núcleo") }
-                SliderRow(title: "Mínimo de GPU", detail: "Uso de GPU a partir del cual un proceso aparece en la lista", value: $listMinGPU,
+                SliderRow(title: "Mínimo de GPU", detail: "Uso medio de GPU a partir del cual un proceso aparece en la lista", value: $listMinGPU,
                           range: Limits.listMinGPU, step: 0.01) { "\(Int(($0 * 100).rounded())) %" }
             }
         }

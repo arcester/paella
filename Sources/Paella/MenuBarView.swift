@@ -96,24 +96,53 @@ struct MenuBarView: View {
     @State private var rowCapacity = MenuBarView.minRows
     @State private var hoverTime: Date?
     @AppStorage(Key.refreshInterval) private var refreshInterval = 10.0
+    @AppStorage(Key.listWindow) private var listWindow = 10.0
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            header
-            sparkline
-            Toggle(isOn: $enabled) {
-                Text("Control automático").font(.headline)
+        VStack(alignment: .leading, spacing: 0) {
+            toolbar
+            summary.padding(.top, 12)
+            control.padding(.top, 12)
+            processList
+        }
+        .padding(14)
+        .frame(width: 380)
+        .background(WindowVisibility(onChange: { visible in model.menuVisible = visible },
+                                     onWindow: { menuWindow = $0; fitRows() }))
+        .onChange(of: model.monitored.count) { fitRows() }
+    }
+
+    // MARK: Toolbar
+
+    private var toolbar: some View {
+        HStack {
+            Text("Paella").font(.title3.weight(.semibold))
+            if model.dryRun { Text("SIMULACIÓN").font(.caption.bold()).foregroundStyle(.orange) }
+            Spacer()
+            HStack(spacing: 14) {
+                ToolbarButton(symbol: "gearshape", help: "Ajustes…") {
+                    NSApp.keyWindow?.close() // the menu panel is key while open
+                    NSApp.activate() // menu bar apps must come forward or the window opens behind others
+                    model.settingsTab = "general"
+                    openSettings()
+                }
+                ToolbarButton(symbol: "power", help: "Salir") { NSApp.terminate(nil) }
             }
-            .toggleStyle(.switch)
-            .controlSize(.large)
-            .frame(maxWidth: .infinity)
-            .onChange(of: enabled) { _, on in if !on { model.resumeAll() } } // release now, not at next tick
-            Divider()
+            .padding(.horizontal, 12).padding(.vertical, 5)
+            .overlay(Capsule().strokeBorder(.separator))
+        }
+    }
+
+    // MARK: Control
+
+    private var control: some View {
+        VStack(alignment: .leading, spacing: 0) {
             // Cross-fade in the same space: the menu bar window doesn't follow height changes.
             ZStack {
-                VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 10) {
                     LabeledSlider(title: "Objetivo", value: $target, range: 65...95, step: 1,
                                   format: { temp($0) }, caption: targetCaption, info: targetInfo)
+                    Divider()
                     LabeledSlider(title: "Ciclo de trabajo mínimo", value: $dutyMin, range: 0.1...1, step: 0.05,
                                   format: { "\(Int(($0 * 100).rounded())) %" }, caption: dutyCaption, info: dutyInfo)
                 }
@@ -129,51 +158,56 @@ struct MenuBarView: View {
                 .opacity(enabled ? 0 : 1)
                 .accessibilityHidden(enabled)
             }
+            .padding(.vertical, 10)
             // Keyed on the value, not the toggle's binding: @AppStorage changes arrive via UserDefaults,
             // outside the binding's transaction, so a binding animation never ran.
             .animation(.easeInOut(duration: 0.8), value: enabled)
-            Divider()
-            processList
-            Divider()
-            HStack {
-                Button("Ajustes…") {
-                    NSApp.keyWindow?.close() // the menu panel is key while open
-                    NSApp.activate() // menu bar apps must come forward or the window opens behind others
-                    model.settingsTab = "general"
-                    openSettings()
-                }
-                if model.dryRun { Text("SIMULACIÓN").font(.caption.bold()).foregroundStyle(.orange) }
-                Spacer()
-                Button("Salir") { NSApp.terminate(nil) }
-            }
         }
-        .padding(14)
-        .frame(width: 380)
-        .background(WindowVisibility(onChange: { visible in model.menuVisible = visible },
-                                     onWindow: { menuWindow = $0; fitRows() }))
-        .onChange(of: model.monitored.count) { fitRows() }
+        .padding(.horizontal, 12)
+        .outlinedBox()
     }
 
     // MARK: Header
 
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack(alignment: .firstTextBaseline) {
+    private var summary: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top) {
                 Text(model.sample.map { temp($0.dieSmoothed, 1) } ?? "–")
                     .font(.system(size: 28, weight: .semibold)).monospacedDigit()
-                VStack(alignment: .leading) {
-                    if model.sample?.usingFallback == true {
-                        Label("Sin sensores: temperatura aproximada", systemImage: "exclamationmark.triangle.fill")
-                            .foregroundStyle(.orange)
-                            .help("Ningún sensor HID coincide con los filtros; se usa el estado térmico de macOS")
-                    } else {
-                        Text(model.sample.map { String(localized: "máx. chip \(temp($0.dieMax, 1)) · \($0.matchedSensors) sensores") } ?? " ")
+                Spacer(minLength: 8)
+                VStack(alignment: .trailing, spacing: 6) {
+                    Toggle(isOn: $enabled) {
+                        Text("Control automático").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
                     }
-                    Text(status.text).foregroundStyle(status.color)
+                    .toggleStyle(.switch)
+                    .controlSize(.small)
+                    .help("Pasa los procesos pesados a los núcleos de eficiencia y los pausa a intervalos")
+                    .onChange(of: enabled) { _, on in if !on { model.resumeAll() } } // release now, not at next tick
+                    StateBadge(text: status.text, color: status.color)
                 }
-                .font(.caption).foregroundStyle(.secondary).lineLimit(1)
             }
+            if model.sample?.usingFallback == true {
+                Label("Sin sensores: temperatura aproximada", systemImage: "exclamationmark.triangle.fill")
+                    .font(.caption).foregroundStyle(.orange)
+                    .help("Ningún sensor HID coincide con los filtros; se usa el estado térmico de macOS")
+            }
+            HStack(alignment: .top) {
+                stat("Máx. chip", model.sample.map { temp($0.dieMax, 1) })
+                stat("Potencia", model.power.map { "\(dec($0)) W" })
+                stat("Sensores", model.sample.map { "\($0.matchedSensors)" })
+            }
+            sparkline
         }
+        .padding(12)
+        .outlinedBox()
+    }
+
+    private func stat(_ title: LocalizedStringKey, _ value: String?) -> some View {
+        VStack(alignment: .leading, spacing: 1) {
+            Text(title).font(.caption2).foregroundStyle(.secondary)
+            Text(value ?? "–").font(.callout.weight(.medium)).monospacedDigit()
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var status: (text: String, color: Color) {
@@ -344,39 +378,45 @@ struct MenuBarView: View {
 
     static let minRows = 6
     static let maxRows = 12
-    static let rowStep = rowHeight + rowSpacing
-    static let rowHeight: CGFloat = 30
-    static let rowSpacing: CGFloat = 6
+    static let rowStep = rowHeight
+    static let rowHeight: CGFloat = 40
 
     private var processList: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 0) {
             HStack {
-                Text("Procesos que más exigen").font(.headline)
+                SectionCaption("Procesos que más exigen · media de \(Int(clamp(listWindow, Limits.listWindow))) min")
                 Spacer()
-                Text("Ilimitado").font(.caption).foregroundStyle(.secondary)
+                SectionCaption("Ilimitado")
             }
-            VStack(alignment: .leading, spacing: Self.rowSpacing) {
+            VStack(alignment: .leading, spacing: 0) {
             if model.monitored.isEmpty {
                 Text("Nada exigente ahora mismo").font(.caption).foregroundStyle(.secondary)
+                    .frame(height: Self.rowHeight)
                     .transition(.opacity)
             }
-            ForEach(model.monitored.prefix(rowCapacity)) { m in
-                HStack(spacing: 8) {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text(m.group.name).lineLimit(1)
-                        Text(m.active ? usage(m.group) : String(localized: "Sin actividad ahora"))
-                            .font(.caption2).foregroundStyle(.secondary).monospacedDigit()
+            ForEach(Array(model.monitored.prefix(rowCapacity).enumerated()), id: \.element.id) { i, m in
+                HStack(spacing: 10) {
+                    AppIcon(group: m.group, system: m.state == .system)
+                    VStack(alignment: .leading, spacing: 1) {
+                        HStack(spacing: 6) {
+                            Text(m.group.name).fontWeight(.semibold).lineLimit(1)
+                                .foregroundStyle(m.state == .system ? .secondary : .primary)
+                            StateBadge(text: badgeText(m.state), color: badgeColor(m.state))
+                        }
+                        Text(m.active ? usage(m) : usage(m) + " · " + String(localized: "Sin actividad ahora"))
+                            .lineLimit(1)
+                            .font(.caption2).foregroundStyle(.tertiary).monospacedDigit()
                     }
-                    Spacer()
-                    StateBadge(text: badgeText(m.state), color: badgeColor(m.state))
+                    Spacer(minLength: 0)
                     Toggle("Ilimitado", isOn: Binding(
                         get: { m.state == .unlimited || m.state == .system }, // system rows are never limited anyway
                         set: { model.setUnlimited(m.group, $0) }))
-                        .labelsHidden().toggleStyle(.switch).controlSize(.mini).tint(.green)
+                        .labelsHidden().toggleStyle(.switch).controlSize(.mini)
                         .disabled(m.state == .system)
                         .help(m.state == .system ? String(localized: "Componente del sistema: nunca se limita") : String(localized: "Ilimitado: nunca se limitará (se recuerda por nombre)"))
                 }
                 .frame(height: Self.rowHeight)
+                .overlay(alignment: .top) { if i > 0 { Divider().padding(.leading, 32) } }
                 .transition(.opacity)
             }
             }
@@ -388,11 +428,14 @@ struct MenuBarView: View {
                 }
             }
             // Room for 6 rows at least; more (up to 12) only when there are processes for them and the screen allows.
-            .frame(height: CGFloat(rowCapacity) * Self.rowStep - Self.rowSpacing, alignment: .top)
+            .frame(height: CGFloat(rowCapacity) * Self.rowStep, alignment: .top)
             .clipped() // while rows cross-fade, leaving and arriving rows are both laid out: up to 12 for a moment
+            .padding(.horizontal, 12)
+            .outlinedBox()
             Text("Activa el interruptor de un proceso para marcarlo como ilimitado: la app no lo limitará nunca y se recuerda para la próxima vez.")
                 .font(.caption2).foregroundStyle(.secondary)
                 .lineLimit(2...3).fixedSize(horizontal: false, vertical: true) // 3 for German
+                .padding(.horizontal, 2).padding(.top, 6)
         }
     }
 
@@ -415,9 +458,9 @@ struct MenuBarView: View {
         }
     }
 
-    private func usage(_ g: TargetGroup) -> String {
-        let gpu = g.gpu.map { String(format: " · GPU %.0f %%", $0 * 100) } ?? ""
-        return String(format: "CPU %.0f %%", g.cpu * 100) + gpu
+    private func usage(_ m: MonitoredGroup) -> String {
+        let gpu = m.gpu.map { String(format: " · GPU %.0f %%", $0 * 100) } ?? ""
+        return String(format: "CPU %.0f %%", m.cpu * 100) + gpu
     }
 
     private func badgeText(_ s: ProcessState) -> String {
@@ -495,6 +538,57 @@ private struct WindowVisibility: NSViewRepresentable {
             // Defer: this can run during a SwiftUI update pass.
             Task { @MainActor [onChange] in onChange?(visible) }
         }
+    }
+}
+
+/// Small caption over a section's box, as in Connecter.
+private struct SectionCaption: View {
+    let title: LocalizedStringKey
+    init(_ title: LocalizedStringKey) { self.title = title }
+
+    var body: some View {
+        Text(title).font(.caption.weight(.semibold)).foregroundStyle(.secondary)
+            .padding(.horizontal, 2).padding(.top, 14).padding(.bottom, 6)
+    }
+}
+
+private struct ToolbarButton: View {
+    let symbol: String
+    let help: LocalizedStringKey
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) { Image(systemName: symbol).font(.system(size: 14)) }
+            .buttonStyle(.borderless)
+            .foregroundStyle(.secondary)
+            .help(help)
+            .accessibilityLabel(Text(help))
+    }
+}
+
+/// The app's own icon; a symbol for system components and command-line tools.
+private struct AppIcon: View {
+    let group: TargetGroup
+    let system: Bool
+
+    var body: some View {
+        Group {
+            if let path = group.bundles.min() {
+                Image(nsImage: NSWorkspace.shared.icon(forFile: path)).resizable()
+            } else {
+                Image(systemName: system ? "gearshape" : "terminal").foregroundStyle(.secondary)
+            }
+        }
+        .frame(width: 22, height: 22)
+        .accessibilityHidden(true)
+    }
+}
+
+extension View {
+    /// Flat panel with a hairline border, the container style shared with Connecter.
+    func outlinedBox(cornerRadius: CGFloat = 8) -> some View {
+        background(.background.secondary, in: .rect(cornerRadius: cornerRadius))
+            .overlay(RoundedRectangle(cornerRadius: cornerRadius).strokeBorder(.separator))
     }
 }
 

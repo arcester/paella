@@ -14,6 +14,10 @@ enum ProcessState {
 struct MonitoredGroup: Identifiable {
     let group: TargetGroup
     var state: ProcessState
+    /// Average use over the list window (cores, GPU share): the list ranks and shows these.
+    var cpu: Double
+    var gpu: Double?
+    var demand: Double { cpu + (gpu ?? 0) }
     /// False when a row kept by the frozen list no longer shows up in the latest scan.
     var active = true
     var id: String { group.key }
@@ -47,6 +51,7 @@ final class AppModel {
     }
     private var frozenKeys: [String]?
     private var lastScan: (groups: [TargetGroup], settings: Settings, frontmost: String?)?
+    private var usage = UsageAverager(retention: Limits.listWindow.upperBound * 60)
     private(set) var throttling = false
     private(set) var duty = 1.0
     private(set) var gpuAvailable = true
@@ -79,6 +84,7 @@ final class AppModel {
     init(dryRun: Bool) {
         self.dryRun = dryRun
         UserDefaults.standard.register(defaults: Key.defaults)
+        applyAppearance()
         cycler = DutyCycler(control: ProcessControl(dryRun: dryRun))
         // Crash recovery: resume processes and LPM a previous instance left behind.
         cycler.recoverFromPreviousRun()
@@ -159,6 +165,7 @@ final class AppModel {
 
     private func updateMonitored(_ groups: [TargetGroup], settings s: Settings, frontmost: String?) {
         lastScan = (groups, s, frontmost)
+        usage.record(groups, at: Date())
         recomputeMonitored()
     }
 
@@ -171,28 +178,37 @@ final class AppModel {
             if let f = scan.frontmost, g.bundles.contains(f) { return .foreground }
             return .normal
         }
+        let s = scan.settings
+        let current = Set(scan.groups.map(\.key))
+        let averages = usage.averages(window: s.listWindow * 60, now: Date())
+        func row(_ a: UsageAverager.Average) -> MonitoredGroup {
+            MonitoredGroup(group: a.group, state: state(a.group), cpu: a.cpu, gpu: a.gpu, active: current.contains(a.group.key))
+        }
         // An empty frozen list (menu opened before the first scan) may fill once, then stays frozen.
         guard let keys = frozenKeys, !keys.isEmpty else {
-            monitored = Array(Self.ordered(scan.groups.filter { !$0.bundles.contains(Bundle.main.bundlePath) }
-                .map { MonitoredGroup(group: $0, state: state($0)) }).prefix(MenuBarView.maxRows))
+            // Ranked by sustained use: the minimums apply to the average; "Ilimitado" rows always stay.
+            let rows = averages.values.map(row).filter {
+                !$0.group.bundles.contains(Bundle.main.bundlePath)
+                    && ($0.cpu > s.listMinCPU || ($0.gpu ?? 0) > s.listMinGPU || $0.state == .unlimited)
+            }
+            monitored = Array(Self.ordered(rows).prefix(MenuBarView.maxRows))
             if frozenKeys != nil { frozenKeys = monitored.map(\.id) }
             return
         }
-        // Frozen: same rows, fresh numbers; a row missing from the scan keeps its last data.
-        let current = Dictionary(scan.groups.map { ($0.key, $0) }, uniquingKeysWith: { a, _ in a })
-        let previous = Dictionary(monitored.map { ($0.id, $0.group) }, uniquingKeysWith: { a, _ in a })
+        // Frozen: same rows, fresh averages; a row that left the window keeps its last data.
+        let previous = Dictionary(monitored.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
         // Order too stays as it was at the last refresh: re-sorting every tick moves rows under the pointer.
         monitored = keys.compactMap { k in
-            if let g = current[k] { return MonitoredGroup(group: g, state: state(g)) }
-            return previous[k].map { MonitoredGroup(group: $0, state: state($0), active: false) }
+            if let a = averages[k] { return row(a) }
+            return previous[k].map { var m = $0; m.state = state(m.group); m.active = false; return m }
         }
     }
 
-    /// "Ilimitado" rows first, then by CPU + GPU use.
+    /// "Ilimitado" rows first, then by average CPU + GPU use.
     private static func ordered(_ rows: [MonitoredGroup]) -> [MonitoredGroup] {
         rows.sorted { a, b in
             let ua = a.state == .unlimited, ub = b.state == .unlimited
-            return ua != ub ? ua : a.group.demand > b.group.demand
+            return ua != ub ? ua : a.demand > b.demand
         }
     }
 
@@ -231,7 +247,6 @@ final class AppModel {
         controller.reset()
         targets = []
         for i in monitored.indices where monitored[i].state == .limited { monitored[i].state = .normal }
-        message = String(localized: "Límites quitados. El control automático está desactivado.")
     }
 
     /// "Ilimitado": remembered by name in the exclusions setting, so it also applies next time.

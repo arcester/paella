@@ -1,5 +1,5 @@
 import PaellaCore
-import Foundation
+import AppKit
 
 /// UserDefaults keys and defaults; views bind the same keys with @AppStorage.
 enum Key {
@@ -23,13 +23,15 @@ enum Key {
     static let refreshInterval = "processListRefreshInterval" // seconds
     static let listMinCPU = "processListMinCPU" // cores
     static let listMinGPU = "processListMinGPU" // share of GPU time
+    static let listWindow = "processListAverageWindow" // minutes the list ranking averages over
     static let menuBarPower = "menuBarShowPower" // second line under the menu bar temperature
     static let tempUnit = "temperatureUnit" // "auto" | "c" | "f"
+    static let appearance = "appearance" // "system" | "light" | "dark"
     static let menuBarTemp = "menuBarTemperature" // "smoothed" | "max" | "pan"
     static let savedLPM = "savedLowPowerMode" // user's LPM state while the last-resort stage is engaged
 
     static var defaults: [String: Any] { [
-        enabled: true, autoRefresh: true, refreshInterval: 10.0, listMinCPU: 0.05, listMinGPU: 0.02, menuBarTemp: "smoothed", tempUnit: "auto", menuBarPower: true, target: 82.0, dutyMin: 0.3, leaveFrontmost: true, eCoresFirst: true, lpmFallback: false,
+        enabled: true, autoRefresh: true, refreshInterval: 10.0, listMinCPU: 0.05, listMinGPU: 0.02, listWindow: 10.0, menuBarTemp: "smoothed", tempUnit: "auto", appearance: "system", menuBarPower: true, target: 82.0, dutyMin: 0.3, leaveFrontmost: true, eCoresFirst: true, lpmFallback: false,
         exclusions: "", knownGPU: "ollama, LM Studio, python, python3, ffmpeg, HandBrakeCLI",
         kp: ControllerConfig().kp, ki: ControllerConfig().ki, tau: 60.0, period: 0.2,
         cpuThreshold: 0.8, gpuThreshold: 0.2,
@@ -52,6 +54,16 @@ enum Limits {
     // (and the 0.2-core known-GPU rule), or demanding processes would go unseen.
     static let listMinCPU = 0.01...0.2
     static let listMinGPU = 0.01...0.05
+    static let listWindow = 1.0...30
+}
+
+/// Light or dark windows (menu and Settings) regardless of the system, or following it.
+@MainActor func applyAppearance() {
+    NSApplication.shared.appearance = switch UserDefaults.standard.string(forKey: Key.appearance) {
+    case "light": NSAppearance(named: .aqua)
+    case "dark": NSAppearance(named: .darkAqua)
+    default: nil
+    }
 }
 
 /// Display unit only: sensors, target and controller all stay in Celsius.
@@ -81,7 +93,7 @@ func tempDelta(_ celsius: Double) -> String {
 
 struct Settings {
     var enabled, leaveFrontmost, eCoresFirst, lpmFallback: Bool
-    var target, dutyMin, kp, ki, tau, period, cpuThreshold, gpuThreshold, listMinCPU, listMinGPU: Double
+    var target, dutyMin, kp, ki, tau, period, cpuThreshold, gpuThreshold, listMinCPU, listMinGPU, listWindow: Double
     var exclusions, knownGPU, sensorFilters, sensorExcludes: [String]
 
     static func current(_ d: UserDefaults = .standard) -> Settings {
@@ -98,6 +110,7 @@ struct Settings {
             gpuThreshold: clamp(d.double(forKey: Key.gpuThreshold), Limits.gpuThreshold),
             listMinCPU: clamp(d.double(forKey: Key.listMinCPU), Limits.listMinCPU),
             listMinGPU: clamp(d.double(forKey: Key.listMinGPU), Limits.listMinGPU),
+            listWindow: clamp(d.double(forKey: Key.listWindow), Limits.listWindow),
             exclusions: list(Key.exclusions), knownGPU: list(Key.knownGPU),
             sensorFilters: list(Key.sensorFilters), sensorExcludes: list(Key.sensorExcludes))
     }

@@ -480,6 +480,110 @@
         }
       }
     },
+    "Apariencia": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erscheinungsbild"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appearance"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apariencia"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apparence"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aspetto"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "外観"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aparência"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "外观"
+          }
+        }
+      }
+    },
+    "Aspecto": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Darstellung"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Theme"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aspecto"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thème"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tema"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "テーマ"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tema"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "主题"
+          }
+        }
+      }
+    },
     "Avanzado": {
       "localizations": {
         "de": {
@@ -892,6 +996,58 @@
           "stringUnit": {
             "state": "translated",
             "value": "高于目标每累积 1 °C·s 减少的占空比"
+          }
+        }
+      }
+    },
+    "Claro": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hell"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Light"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claro"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clair"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chiaro"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ライト"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claro"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "浅色"
           }
         }
       }
@@ -2254,6 +2410,58 @@
         }
       }
     },
+    "La lista ordena los procesos por su uso medio en este tiempo, no por el del momento": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Die Liste sortiert Prozesse nach ihrer mittleren Nutzung in diesem Zeitraum, nicht nach der aktuellen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The list ranks processes by their average use over this time, not by their current use"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La lista ordena los procesos por su uso medio en este tiempo, no por el del momento"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "La liste classe les processus selon leur utilisation moyenne sur cette durée, pas selon l’instant présent"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "L’elenco ordina i processi in base all’uso medio in questo intervallo, non a quello del momento"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "リストは現在の使用量ではなく、この期間の平均使用量でプロセスを並べます"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A lista ordena os processos pelo uso médio nesse período, não pelo uso do momento"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "列表按此时段内的平均占用排序进程，而不是按当前占用"
+          }
+        }
+      }
+    },
     "Leer las temperaturas, medir el uso de CPU y GPU, pausar procesos y pasarlos a los núcleos de eficiencia no requieren permisos: solo se actúa sobre procesos de tu usuario.": {
       "localizations": {
         "de": {
@@ -2618,54 +2826,54 @@
         }
       }
     },
-    "Límites quitados. El control automático está desactivado.": {
+    "Media de": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Begrenzungen aufgehoben. Die automatische Regelung ist aus."
+            "value": "Mittel über"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Limits removed. Automatic control is off."
+            "value": "Average over"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Límites quitados. El control automático está desactivado."
+            "value": "Media de"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Limites supprimées. Le contrôle automatique est désactivé."
+            "value": "Moyenne sur"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Limiti rimossi. Il controllo automatico è disattivato."
+            "value": "Media su"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "制限を解除しました。自動制御はオフです。"
+            "value": "平均期間"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Limites removidos. O controle automático está desativado."
+            "value": "Média de"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已解除限制。自动控制已关闭。"
+            "value": "平均时长"
           }
         }
       }
@@ -3554,6 +3762,58 @@
         }
       }
     },
+    "Oscuro": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dunkel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dark"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oscuro"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sombre"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scuro"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ダーク"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escuro"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "深色"
+          }
+        }
+      }
+    },
     "Paella": {
       "shouldTranslate": false
     },
@@ -3709,6 +3969,58 @@
           "stringUnit": {
             "state": "translated",
             "value": "为了在不关闭任何程序的情况下降温，应用每秒多次暂停和恢复繁重的进程：在每个 %1$lld ms 的周期中，它们只运行一部分时间，其余时间暂停。这部分就是占空比，应用会根据温度每 2 秒自动调整。\n\n此设置是下限：无论多热，都不会低于 %2$@。只有在最低值时温度仍高于目标才有影响（菜单栏会持续显示 ▼%3$@）。\n\n越低越凉，但工作耗时更长。越高进展越快，但更热。移到能效核心的效果会叠加，因此实际减速可能更大。"
+          }
+        }
+      }
+    },
+    "Pasa los procesos pesados a los núcleos de eficiencia y los pausa a intervalos": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verschiebt rechenintensive Prozesse auf die Effizienzkerne und pausiert sie in Intervallen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moves heavy processes to the efficiency cores and pauses them at intervals"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pasa los procesos pesados a los núcleos de eficiencia y los pausa a intervalos"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Déplace les processus gourmands vers les cœurs d’efficacité et les met en pause par intervalles"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sposta i processi pesanti sui core di efficienza e li mette in pausa a intervalli"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "負荷の高いプロセスを高効率コアに移し、一定間隔で一時停止します"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Move os processos pesados para os núcleos de eficiência e os pausa em intervalos"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "将高负载进程移到能效核心，并间歇性地暂停它们"
           }
         }
       }
@@ -4025,54 +4337,54 @@
         }
       }
     },
-    "Procesos que más exigen": {
+    "Procesos que más exigen · media de %lld min": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Anspruchsvollste Prozesse"
+            "value": "Anspruchsvollste · Mittel %lld Min."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Most demanding processes"
+            "value": "Most demanding · %lld min average"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Procesos que más exigen"
+            "value": "Procesos que más exigen · media de %lld min"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Processus les plus exigeants"
+            "value": "Plus exigeants · moyenne %lld min"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Processi più esigenti"
+            "value": "Più esigenti · media %lld min"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "負荷の高いプロセス"
+            "value": "高負荷プロセス · %lld分平均"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Processos mais exigentes"
+            "value": "Mais exigentes · média de %lld min"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "高负载进程"
+            "value": "最耗资源 · %lld 分钟平均"
           }
         }
       }
@@ -5585,58 +5897,6 @@
         }
       }
     },
-    "Uso de CPU a partir del cual un proceso aparece en la lista": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "CPU-Nutzung, ab der ein Prozess in der Liste erscheint"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "CPU use above which a process appears in the list"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uso de CPU a partir del cual un proceso aparece en la lista"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Usage CPU au-delà duquel un processus apparaît dans la liste"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uso di CPU oltre il quale un processo compare nell’elenco"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "このCPU使用率を超えるとリストに表示されます"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uso de CPU a partir do qual um processo aparece na lista"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "CPU 使用率超过此值的进程会显示在列表中"
-          }
-        }
-      }
-    },
     "Uso de CPU a partir del cual un proceso se puede limitar": {
       "localizations": {
         "de": {
@@ -5689,54 +5949,106 @@
         }
       }
     },
-    "Uso de GPU a partir del cual un proceso aparece en la lista": {
+    "Uso medio de CPU a partir del cual un proceso aparece en la lista": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "GPU-Nutzung, ab der ein Prozess in der Liste erscheint"
+            "value": "Mittlere CPU-Nutzung, ab der ein Prozess in der Liste erscheint"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "GPU use above which a process appears in the list"
+            "value": "Average CPU use above which a process appears in the list"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Uso de GPU a partir del cual un proceso aparece en la lista"
+            "value": "Uso medio de CPU a partir del cual un proceso aparece en la lista"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Usage GPU au-delà duquel un processus apparaît dans la liste"
+            "value": "Utilisation moyenne du CPU à partir de laquelle un processus apparaît dans la liste"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Uso di GPU oltre il quale un processo compare nell’elenco"
+            "value": "Uso medio della CPU oltre il quale un processo compare nell’elenco"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "このGPU使用率を超えるとリストに表示されます"
+            "value": "この平均CPU使用率を超えるとプロセスがリストに表示されます"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Uso de GPU a partir do qual um processo aparece na lista"
+            "value": "Uso médio de CPU a partir do qual um processo aparece na lista"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "GPU 使用率超过此值的进程会显示在列表中"
+            "value": "平均 CPU 占用超过此值的进程会显示在列表中"
+          }
+        }
+      }
+    },
+    "Uso medio de GPU a partir del cual un proceso aparece en la lista": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mittlere GPU-Nutzung, ab der ein Prozess in der Liste erscheint"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Average GPU use above which a process appears in the list"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uso medio de GPU a partir del cual un proceso aparece en la lista"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Utilisation moyenne du GPU à partir de laquelle un processus apparaît dans la liste"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uso medio della GPU oltre il quale un processo compare nell’elenco"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "この平均GPU使用率を超えるとプロセスがリストに表示されます"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uso médio de GPU a partir do qual um processo aparece na lista"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "平均 GPU 占用超过此值的进程会显示在列表中"
           }
         }
       }
@@ -5795,58 +6107,6 @@
     },
     "W": {
       "shouldTranslate": false
-    },
-    "máx. chip %@ · %lld sensores": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Chip-Max. %1$@ · %2$lld Sensoren"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "chip max %1$@ · %2$lld sensors"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "máx. chip %@ · %lld sensores"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "max. puce %1$@ · %2$lld capteurs"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "max chip %1$@ · %2$lld sensori"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "チップ最大 %1$@ · センサー%2$lld個"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "máx. chip %1$@ · %2$lld sensores"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "芯片最高 %1$@ · %2$lld 个传感器"
-          }
-        }
-      }
     },
     "objetivo": {
       "shouldTranslate": false
