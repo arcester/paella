@@ -86,7 +86,8 @@ public actor ProcessMonitor {
     public init() {}
 
     /// `keep`: processes to report even when (nearly) idle, e.g. the ones currently throttled.
-    public func scan(keep: Set<ProcessKey> = []) -> ProcessScan {
+    /// Processes below `minCPU` (cores) and `minGPU` (share) are left out unless in `keep`.
+    public func scan(keep: Set<ProcessKey> = [], minCPU: Double = 0.05, minGPU: Double = 0.02) -> ProcessScan {
         let now = Date()
         let dt = lastTime.map { now.timeIntervalSince($0) } ?? 0
         lastTime = now
@@ -103,7 +104,7 @@ public actor ProcessMonitor {
             guard dt > 0.5 else { continue }
             let cpuRate = lastCPU[key].map { Double(ns &- $0) / (dt * 1e9) } ?? 0
             let gpuRate: Double? = gpuTimes == nil ? nil : (g.flatMap { g in lastGPU[key].map { Double(g &- $0) / (dt * 1e9) } } ?? 0)
-            guard cpuRate > 0.05 || (gpuRate ?? 0) > 0.02 || keep.contains(key) else { continue }
+            guard cpuRate > minCPU || (gpuRate ?? 0) > minGPU || keep.contains(key) else { continue }
             let path = ProcInfo.path(pid)
             let name = path.isEmpty ? ProcInfo.name(pid) : (path as NSString).lastPathComponent
             samples.append(ProcessSample(key: key, name: name, path: path, cpu: max(cpuRate, 0), gpu: gpuRate.map { min(max($0, 0), 1) }))
@@ -154,6 +155,8 @@ public struct TargetGroup: Sendable, Identifiable {
     public let isProtected: Bool
     public var cpu: Double { members.reduce(0) { $0 + $1.cpu } }
     public var gpu: Double? { members.contains { $0.gpu != nil } ? members.reduce(0) { $0 + ($1.gpu ?? 0) } : nil }
+    /// The .app bundles its processes come from (several when same-named apps were merged).
+    public var bundles: Set<String> { Set(members.compactMap { TargetSelector.bundle(of: $0.path) }) }
     /// Ranking for the "most demanding" list: CPU cores + GPU share.
     public var demand: Double { cpu + (gpu ?? 0) }
 }
@@ -175,12 +178,19 @@ public enum TargetSelector {
     static let protectedPrefixes = ["/System/", "/usr/libexec/", "/usr/sbin/", "/sbin/", "/Library/Apple/"]
 
     /// Helpers live inside their app's bundle, so the outermost `.app` groups them with the app.
+    /// Same-named apps share one group (e.g. Claude.app and Claude Code's claude.app): "Ilimitado"
+    /// already matches by name, so two rows called "Claude" would be one choice shown twice.
     public static func group(for s: ProcessSample) -> (key: String, name: String) {
-        if let r = s.path.range(of: ".app/") {
-            let bundle = String(s.path[..<r.lowerBound]) + ".app"
-            return (bundle, ((bundle as NSString).lastPathComponent as NSString).deletingPathExtension)
+        if let bundle = bundle(of: s.path) {
+            let name = ((bundle as NSString).lastPathComponent as NSString).deletingPathExtension
+            return ("app:" + name.lowercased(), name)
         }
         return ("\(s.key.pid)-\(s.key.start)", s.name)
+    }
+
+    /// Outermost .app containing `path`, if any.
+    static func bundle(of path: String) -> String? {
+        path.range(of: ".app/").map { String(path[..<$0.lowerBound]) + ".app" }
     }
 
     static func listed(_ name: String, in list: [String]) -> Bool {
@@ -195,14 +205,14 @@ public enum TargetSelector {
     /// All sampled processes grouped by app, most demanding first.
     public static func groups(_ samples: [ProcessSample]) -> [TargetGroup] {
         Dictionary(grouping: samples) { group(for: $0).key }.map { key, members in
-            TargetGroup(key: key, name: group(for: members[0]).name, members: members,
+            TargetGroup(key: key, name: members.map { group(for: $0).name }.min()!, members: members, // "Claude" over "claude"
                         isProtected: members.contains { s in s.path.isEmpty || protectedPrefixes.contains { s.path.hasPrefix($0) } })
         }.sorted { $0.demand > $1.demand }
     }
 
     public static func select(_ groups: [TargetGroup], policy p: SelectionPolicy) -> [TargetGroup] {
         groups.filter { g in
-            if g.isProtected || p.excludedBundlePaths.contains(g.key) || isExcluded(g, by: p.exclusions) { return false }
+            if g.isProtected || !g.bundles.isDisjoint(with: p.excludedBundlePaths) || isExcluded(g, by: p.exclusions) { return false }
             // Sticky: a limited (and E-core-demoted) group is starved, so its measured usage says
             // nothing about its demand. It stays a target until limiting ends.
             if p.activeGroups.contains(g.key) { return true }

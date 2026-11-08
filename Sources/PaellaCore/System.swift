@@ -1,4 +1,6 @@
 import Foundation
+import IOKit
+import CHIDPrivate
 
 public enum Shell {
     @discardableResult
@@ -105,5 +107,22 @@ public enum LaunchAgent {
     public static func uninstall() {
         try? FileManager.default.removeItem(at: url)
         Shell.run("/bin/launchctl", ["bootout", "\(domain)/\(label)"])
+    }
+}
+
+/// Whole-machine power draw.
+public enum SystemPower {
+    /// Watts: the SMC's system total (PSTR, refreshed about every second), else the battery
+    /// controller's telemetry (refreshed only every ~25 s). Nil when neither exists.
+    public static func watts() -> Double? {
+        let pstr = ATGSMCReadFloat("PSTR")
+        if pstr.isFinite, pstr > 0, pstr < 500 { return pstr }
+        let svc = IOServiceGetMatchingService(kIOMainPortDefault, IOServiceMatching("AppleSmartBattery"))
+        guard svc != 0 else { return nil }
+        defer { IOObjectRelease(svc) }
+        guard let t = IORegistryEntryCreateCFProperty(svc, "PowerTelemetryData" as CFString, kCFAllocatorDefault, 0)?
+                .takeRetainedValue() as? [String: Any],
+              let mw = (t["SystemLoad"] as? NSNumber)?.doubleValue, mw > 0, mw < 500_000 else { return nil }
+        return mw / 1000
     }
 }

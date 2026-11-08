@@ -38,3 +38,15 @@ private func proc(_ pid: Int32, _ path: String, cpu: Double, gpu: Double? = 0) -
     p.activeGroups = ["3-1"]
     #expect(TargetSelector.select(groups, policy: p).map(\.name) == ["ffmpeg"])
 }
+
+@Test func sameNamedAppsShareOneGroup() {
+    let groups = TargetSelector.groups([
+        proc(1, "/Applications/Claude.app/Contents/MacOS/Claude", cpu: 0.4),
+        proc(2, "/Users/me/Library/Application Support/Claude/claude-code/1/claude.app/Contents/MacOS/claude", cpu: 0.9),
+    ])
+    #expect(groups.map(\.name) == ["Claude"])
+    #expect(groups.first?.bundles.count == 2)
+    var p = SelectionPolicy()
+    p.excludedBundlePaths = ["/Applications/Claude.app"] // frontmost: covers the merged group
+    #expect(TargetSelector.select(groups, policy: p).isEmpty)
+}

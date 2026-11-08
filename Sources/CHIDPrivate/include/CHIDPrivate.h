@@ -16,4 +16,7 @@ CFTypeRef _Nullable IOHIDServiceClientCopyProperty(ATGHIDServiceClientRef servic
 ATGHIDEventRef _Nullable IOHIDServiceClientCopyEvent(ATGHIDServiceClientRef service, int64_t type, int32_t options, int64_t timestamp) CF_RETURNS_RETAINED;
 double IOHIDEventGetFloatValue(ATGHIDEventRef event, int32_t field);
 
+/// Reads a 4-byte float SMC key (e.g. "PSTR", system power in W). NAN if missing or unreadable.
+double ATGSMCReadFloat(const char *key);
+
 CF_ASSUME_NONNULL_END

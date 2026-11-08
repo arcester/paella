@@ -19,11 +19,17 @@ enum Key {
     static let gpuThreshold = "gpuThreshold"
     static let sensorFilters = "sensorFilters"
     static let sensorExcludes = "sensorExcludes"
+    static let autoRefresh = "autoRefreshProcessList" // menu open: refresh the list periodically
+    static let refreshInterval = "processListRefreshInterval" // seconds
+    static let listMinCPU = "processListMinCPU" // cores
+    static let listMinGPU = "processListMinGPU" // share of GPU time
+    static let menuBarPower = "menuBarShowPower" // second line under the menu bar temperature
+    static let tempUnit = "temperatureUnit" // "auto" | "c" | "f"
     static let menuBarTemp = "menuBarTemperature" // "smoothed" | "max" | "pan"
     static let savedLPM = "savedLowPowerMode" // user's LPM state while the last-resort stage is engaged
 
     static var defaults: [String: Any] { [
-        enabled: true, menuBarTemp: "smoothed", target: 82.0, dutyMin: 0.3, leaveFrontmost: true, eCoresFirst: true, lpmFallback: false,
+        enabled: true, autoRefresh: true, refreshInterval: 10.0, listMinCPU: 0.05, listMinGPU: 0.02, menuBarTemp: "smoothed", tempUnit: "auto", menuBarPower: true, target: 82.0, dutyMin: 0.3, leaveFrontmost: true, eCoresFirst: true, lpmFallback: false,
         exclusions: "", knownGPU: "ollama, LM Studio, python, python3, ffmpeg, HandBrakeCLI",
         kp: ControllerConfig().kp, ki: ControllerConfig().ki, tau: 60.0, period: 0.2,
         cpuThreshold: 0.8, gpuThreshold: 0.2,
@@ -41,11 +47,41 @@ enum Limits {
     static let period = 0.1...1
     static let cpuThreshold = 0.3...4
     static let gpuThreshold = 0.05...1
+    static let refreshInterval = 5.0...60
+    // The scan feeds the controller too: these must stay under the lowest cpuThreshold / gpuThreshold
+    // (and the 0.2-core known-GPU rule), or demanding processes would go unseen.
+    static let listMinCPU = 0.01...0.2
+    static let listMinGPU = 0.01...0.05
+}
+
+/// Display unit only: sensors, target and controller all stay in Celsius.
+enum TempUnit {
+    static var fahrenheit: Bool {
+        switch UserDefaults.standard.string(forKey: Key.tempUnit) {
+        case "f": true
+        case "c": false
+        default: Locale.current.measurementSystem == .us
+        }
+    }
+    static var symbol: String { fahrenheit ? "°F" : "°C" }
+}
+
+/// An absolute temperature converted to the display unit (charts).
+func displayTemp(_ celsius: Double) -> Double { TempUnit.fahrenheit ? celsius * 9 / 5 + 32 : celsius }
+
+/// An absolute temperature for display: "72 °C" / "162 °F".
+func temp(_ celsius: Double, _ digits: Int = 0) -> String {
+    "\(dec(displayTemp(celsius), digits)) \(TempUnit.symbol)"
+}
+
+/// A temperature difference for display: 2 °C → "4 °F" (no +32 offset).
+func tempDelta(_ celsius: Double) -> String {
+    "\(dec(TempUnit.fahrenheit ? celsius * 9 / 5 : celsius, 0)) \(TempUnit.symbol)"
 }
 
 struct Settings {
     var enabled, leaveFrontmost, eCoresFirst, lpmFallback: Bool
-    var target, dutyMin, kp, ki, tau, period, cpuThreshold, gpuThreshold: Double
+    var target, dutyMin, kp, ki, tau, period, cpuThreshold, gpuThreshold, listMinCPU, listMinGPU: Double
     var exclusions, knownGPU, sensorFilters, sensorExcludes: [String]
 
     static func current(_ d: UserDefaults = .standard) -> Settings {
@@ -60,6 +96,8 @@ struct Settings {
             tau: clamp(d.double(forKey: Key.tau), Limits.tau), period: clamp(d.double(forKey: Key.period), Limits.period),
             cpuThreshold: clamp(d.double(forKey: Key.cpuThreshold), Limits.cpuThreshold),
             gpuThreshold: clamp(d.double(forKey: Key.gpuThreshold), Limits.gpuThreshold),
+            listMinCPU: clamp(d.double(forKey: Key.listMinCPU), Limits.listMinCPU),
+            listMinGPU: clamp(d.double(forKey: Key.listMinGPU), Limits.listMinGPU),
             exclusions: list(Key.exclusions), knownGPU: list(Key.knownGPU),
             sensorFilters: list(Key.sensorFilters), sensorExcludes: list(Key.sensorExcludes))
     }

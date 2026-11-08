@@ -7,6 +7,7 @@ struct SettingsView: View {
     var body: some View {
         TabView(selection: $model.settingsTab) {
             GeneralSettings(model: model).tabItem { Label("General", systemImage: "gearshape") }.tag("general")
+            MenuSettings().tabItem { Label("Menú", systemImage: "menubar.rectangle") }.tag("menu")
             PermissionSettings(model: model).tabItem { Label("Permisos", systemImage: "lock.shield") }.tag("permissions")
             AdvancedSettings(model: model).tabItem { Label("Avanzado", systemImage: "slider.horizontal.3") }.tag("advanced")
         }
@@ -17,10 +18,57 @@ struct SettingsView: View {
 
 private struct GeneralSettings: View {
     @Bindable var model: AppModel
+    @AppStorage(Key.tempUnit) private var tempUnit = "auto"
     @AppStorage(Key.leaveFrontmost) private var leaveFrontmost = true
     @AppStorage(Key.eCoresFirst) private var eCoresFirst = true
     @AppStorage(Key.lpmFallback) private var lpmFallback = false
+
+    var body: some View {
+        Form {
+            Section("Inicio") {
+                Toggle("Abrir al iniciar sesión", isOn: $model.launchAtLogin)
+                Toggle(isOn: Binding(get: { model.watchdogInstalled }, set: { model.setWatchdog($0) })) {
+                    Text("Vigilante")
+                    Text("Si la app se cierra a la fuerza, macOS la vuelve a abrir y reanuda al instante los procesos que estuvieran pausados. Al activarlo, la app se reinicia bajo launchd.")
+                }
+            }
+            Section("Unidades") {
+                Picker("Temperatura", selection: $tempUnit) {
+                    Text("Según el sistema").tag("auto")
+                    Text("Celsius (°C)").tag("c")
+                    Text("Fahrenheit (°F)").tag("f")
+                }
+            }
+            Section("Comportamiento") {
+                Toggle(isOn: $leaveFrontmost) {
+                    Text("No limitar la app en primer plano")
+                    Text("La app que estás usando nunca se limita, aunque sea la que más exige.")
+                }
+                Toggle(isOn: $eCoresFirst) {
+                    Text("Usar primero los núcleos de eficiencia")
+                    Text("\(tempDelta(2)) antes del objetivo, los procesos pesados pasan a los núcleos de eficiencia. Enfría mucho antes de tener que pausarlos.")
+                }
+                Toggle(isOn: $lpmFallback) {
+                    Text("Modo de bajo consumo como último recurso")
+                    Text(model.sudoersInstalled
+                         ? String(localized: "Si tras 3 min en el ciclo mínimo la temperatura sigue \(tempDelta(5)) por encima del objetivo, se activa el Modo de bajo consumo. Se devuelve a como estaba cuando baja \(tempDelta(5)) por debajo durante 2 min.")
+                         : String(localized: "Necesita el permiso de la pestaña Permisos."))
+                }
+                .disabled(!model.sudoersInstalled)
+            }
+            if let m = model.message { Text(m).foregroundStyle(.secondary) }
+        }
+        .formStyle(.grouped)
+    }
+}
+
+private struct MenuSettings: View {
     @AppStorage(Key.menuBarTemp) private var menuBarTemp = "smoothed"
+    @AppStorage(Key.menuBarPower) private var menuBarPower = true
+    @AppStorage(Key.autoRefresh) private var autoRefresh = true
+    @AppStorage(Key.refreshInterval) private var refreshInterval = 10.0
+    @AppStorage(Key.listMinCPU) private var listMinCPU = 0.05
+    @AppStorage(Key.listMinGPU) private var listMinGPU = 0.02
 
     private var menuBarDetail: String {
         switch menuBarTemp {
@@ -32,13 +80,6 @@ private struct GeneralSettings: View {
 
     var body: some View {
         Form {
-            Section("Inicio") {
-                Toggle("Abrir al iniciar sesión", isOn: $model.launchAtLogin)
-                Toggle(isOn: Binding(get: { model.watchdogInstalled }, set: { model.setWatchdog($0) })) {
-                    Text("Vigilante")
-                    Text("Si la app se cierra a la fuerza, macOS la vuelve a abrir y reanuda al instante los procesos que estuvieran pausados. Al activarlo, la app se reinicia bajo launchd.")
-                }
-            }
             Section("Barra de menús") {
                 Picker(selection: $menuBarTemp) {
                     Text("Temperatura suavizada").tag("smoothed")
@@ -48,25 +89,24 @@ private struct GeneralSettings: View {
                     Text("Icono de la barra de menús")
                     Text(menuBarDetail)
                 }
+                Toggle(isOn: $menuBarPower) {
+                    Text("Mostrar la potencia debajo")
+                    Text("Consumo total del equipo en vatios, según el controlador de la batería.")
+                }
             }
-            Section("Comportamiento") {
-                Toggle(isOn: $leaveFrontmost) {
-                    Text("No limitar la app en primer plano")
-                    Text("La app que estás usando nunca se limita, aunque sea la que más exige.")
+            Section("Lista de procesos") {
+                Toggle(isOn: $autoRefresh) {
+                    Text("Actualizar con el menú abierto")
+                    Text("Si está desactivado, la lista no cambia mientras la miras.")
                 }
-                Toggle(isOn: $eCoresFirst) {
-                    Text("Usar primero los núcleos de eficiencia")
-                    Text("2 °C antes del objetivo, los procesos pesados pasan a los núcleos de eficiencia. Enfría mucho antes de tener que pausarlos.")
-                }
-                Toggle(isOn: $lpmFallback) {
-                    Text("Modo de bajo consumo como último recurso")
-                    Text(model.sudoersInstalled
-                         ? String(localized: "Si tras 3 min en el ciclo mínimo la temperatura sigue 5 °C por encima del objetivo, se activa el Modo de bajo consumo. Se devuelve a como estaba cuando baja 5 °C por debajo durante 2 min.")
-                         : String(localized: "Necesita el permiso de la pestaña Permisos."))
-                }
-                .disabled(!model.sudoersInstalled)
+                SliderRow(title: "Cada", detail: "Cada cuánto entran y salen procesos de la lista", value: $refreshInterval,
+                          range: Limits.refreshInterval, step: 5) { "\(Int($0)) s" }
+                    .disabled(!autoRefresh)
+                SliderRow(title: "Mínimo de CPU", detail: "Uso de CPU a partir del cual un proceso aparece en la lista", value: $listMinCPU,
+                          range: Limits.listMinCPU, step: 0.01) { String(localized: "\(Int(($0 * 100).rounded())) % de núcleo") }
+                SliderRow(title: "Mínimo de GPU", detail: "Uso de GPU a partir del cual un proceso aparece en la lista", value: $listMinGPU,
+                          range: Limits.listMinGPU, step: 0.01) { "\(Int(($0 * 100).rounded())) %" }
             }
-            if let m = model.message { Text(m).foregroundStyle(.secondary) }
         }
         .formStyle(.grouped)
     }
@@ -159,7 +199,7 @@ private struct SliderRow: View {
                 Text(detail)
             }
             // Values stored outside the range (older versions, `defaults write`) snap into it.
-            Slider(value: Binding(get: { clamp(value, range) }, set: { value = $0 }), in: range, step: step)
+            Slider(value: snapped($value, range, step), in: range)
                 .labelsHidden()
         }
     }

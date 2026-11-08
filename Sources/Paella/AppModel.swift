@@ -24,12 +24,14 @@ struct HistoryPoint: Identifiable {
     let time: Date
     let dieMax: Double
     let smoothed: Double
+    let power: Double?
 }
 
 @MainActor @Observable
 final class AppModel {
     let dryRun: Bool
     private(set) var sample: ThermalSample?
+    private(set) var power: Double? // watts, whole machine
     private(set) var history: [HistoryPoint] = []
     private(set) var targets: [TargetGroup] = []
     /// The most demanding processes (grouped by app), with their state.
@@ -65,10 +67,10 @@ final class AppModel {
     var lowPowerModeEngaged: Bool { controller.savedLowPowerMode != nil }
 
     var menuLabel: String {
-        guard let s = sample else { return "–°" }
+        guard let s = sample else { return "– " + TempUnit.symbol }
         let mode = UserDefaults.standard.string(forKey: Key.menuBarTemp)
         let t = mode == "max" ? s.dieMax : s.dieSmoothed
-        var label = mode == "pan" ? "" : "\(Int(t.rounded()))°" // "pan": the icon stands in for the number
+        var label = mode == "pan" ? "" : temp(t) // "pan": the icon stands in for the number
         if lowPowerModeEngaged && LowPowerMode.isEnabled { label += " " + String(localized: "Ahorro") } else if throttling && duty < 1 { label += " ▼\(Int((duty * 100).rounded()))%" }
         if s.usingFallback { label += " ⚠︎" }
         return label
@@ -103,11 +105,15 @@ final class AppModel {
         let s = Settings.current()
         let now = Date().timeIntervalSince1970
         let sample = await reader.sample(now: now, tau: s.tau, filters: s.sensorFilters, excludes: s.sensorExcludes)
-        let scan = await monitor.scan(keep: Set(targets.flatMap { $0.members.map(\.key) }))
+        // Unlimited rows stay listed even when idle (the scan drops idle processes otherwise).
+        let unlimited = monitored.filter { $0.state == .unlimited }.map(\.group)
+        let scan = await monitor.scan(keep: Set((targets + unlimited).flatMap { $0.members.map(\.key) }),
+                                      minCPU: s.listMinCPU, minGPU: s.listMinGPU)
         guard !shutDown else { return }
         self.sample = sample
+        power = SystemPower.watts()
         gpuAvailable = scan.gpuAvailable
-        history.append(HistoryPoint(time: Date(), dieMax: sample.dieMax, smoothed: sample.dieSmoothed))
+        history.append(HistoryPoint(time: Date(), dieMax: sample.dieMax, smoothed: sample.dieSmoothed, power: power))
         if history.count > 300 { history.removeFirst(history.count - 300) } // 10 min at 2 s
 
         let groups = TargetSelector.groups(scan.samples)
@@ -162,22 +168,31 @@ final class AppModel {
             if g.isProtected { return .system }
             if TargetSelector.isExcluded(g, by: scan.settings.exclusions) { return .unlimited }
             if activeGroups.contains(g.key) { return .limited }
-            if g.key == scan.frontmost { return .foreground }
+            if let f = scan.frontmost, g.bundles.contains(f) { return .foreground }
             return .normal
         }
         // An empty frozen list (menu opened before the first scan) may fill once, then stays frozen.
         guard let keys = frozenKeys, !keys.isEmpty else {
-            monitored = scan.groups.filter { $0.key != Bundle.main.bundlePath }.prefix(6)
-                .map { MonitoredGroup(group: $0, state: state($0)) }
+            monitored = Array(Self.ordered(scan.groups.filter { !$0.bundles.contains(Bundle.main.bundlePath) }
+                .map { MonitoredGroup(group: $0, state: state($0)) }).prefix(MenuBarView.maxRows))
             if frozenKeys != nil { frozenKeys = monitored.map(\.id) }
             return
         }
         // Frozen: same rows, fresh numbers; a row missing from the scan keeps its last data.
         let current = Dictionary(scan.groups.map { ($0.key, $0) }, uniquingKeysWith: { a, _ in a })
         let previous = Dictionary(monitored.map { ($0.id, $0.group) }, uniquingKeysWith: { a, _ in a })
+        // Order too stays as it was at the last refresh: re-sorting every tick moves rows under the pointer.
         monitored = keys.compactMap { k in
             if let g = current[k] { return MonitoredGroup(group: g, state: state(g)) }
             return previous[k].map { MonitoredGroup(group: $0, state: state($0), active: false) }
+        }
+    }
+
+    /// "Ilimitado" rows first, then by CPU + GPU use.
+    private static func ordered(_ rows: [MonitoredGroup]) -> [MonitoredGroup] {
+        rows.sorted { a, b in
+            let ua = a.state == .unlimited, ub = b.state == .unlimited
+            return ua != ub ? ua : a.group.demand > b.group.demand
         }
     }
 
@@ -230,6 +245,8 @@ final class AppModel {
         UserDefaults.standard.set(list.joined(separator: ", "), forKey: Key.exclusions)
         if let i = monitored.firstIndex(where: { $0.group.key == group.key }) {
             monitored[i].state = unlimited ? .unlimited : .normal
+            monitored = Self.ordered(monitored)
+            if frozenKeys != nil { frozenKeys = monitored.map(\.id) } // keep the new place on later ticks
         }
         guard unlimited, activeGroups.contains(group.key) else { return }
         targets.removeAll { $0.key == group.key }
