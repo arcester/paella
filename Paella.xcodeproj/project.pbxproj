@@ -1,0 +1,365 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 60;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7D2E8F1A615A1C75D07154BA /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = B97F53879370B1587F84EE79 /* main.swift */; };
+		7380FE1E4A563F37ED194143 /* CLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A42B9FEBFFF431E3A7C76BB /* CLI.swift */; };
+		0845A3C55719678685F35BFF /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF88B00AF7F1B4BEBB0A539B /* Settings.swift */; };
+		B6481E95F245E6FBF037677E /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7A30D8B3A7D72DDC7D3157 /* AppModel.swift */; };
+		CF6113680C8FEE79E8799F1D /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F0BA0ED3B348F7521F1EF0 /* MenuBarView.swift */; };
+		02280F2AE248526A2A428A75 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5444F3566E12A3458262568 /* SettingsView.swift */; };
+		7F2B7139A6E550757B5240DC /* PaellaCore in Frameworks */ = {isa = PBXBuildFile; productRef = 71EAE8F71F1D9FF6CCA95F35 /* PaellaCore */; };
+		1C430DBB7A80462D009F07B9 /* ThermalControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC0EBAAE068B1D97629D808 /* ThermalControllerTests.swift */; };
+		C47EFB956CCFA6A5F682FA24 /* TargetSelectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28CBD8FB86924A00E3E028D9 /* TargetSelectorTests.swift */; };
+		2C65C348400B798F5E09B8C1 /* PaellaCore in Frameworks */ = {isa = PBXBuildFile; productRef = 493AA130614F3EB1FACCF7E0 /* PaellaCore */; };
+		A1C0FFEE0000000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A1C0FFEE0000000000000002 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B97F53879370B1587F84EE79 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		3A42B9FEBFFF431E3A7C76BB /* CLI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLI.swift; sourceTree = "<group>"; };
+		FF88B00AF7F1B4BEBB0A539B /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		8F7A30D8B3A7D72DDC7D3157 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		28F0BA0ED3B348F7521F1EF0 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
+		E5444F3566E12A3458262568 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		D2A57DC1D883FD21FB995169 /* Paella.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Paella.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCC0EBAAE068B1D97629D808 /* ThermalControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThermalControllerTests.swift; sourceTree = "<group>"; };
+		28CBD8FB86924A00E3E028D9 /* TargetSelectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TargetSelectorTests.swift; sourceTree = "<group>"; };
+		47A56294051C69730D11AC40 /* PaellaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PaellaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1C0FFEE0000000000000002 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Resources/Assets.xcassets; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DAF6AA633395B1B76148E35B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7F2B7139A6E550757B5240DC /* PaellaCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D2E90322B493B9AE82EC2FF6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C65C348400B798F5E09B8C1 /* PaellaCore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2B731CEFC6751AAE0EC69B98 = {
+			isa = PBXGroup;
+			children = (
+				D8DBA3F9900DD17689CA0C4D /* Paella */,
+				0661E103D80A7FA3D82F6BCB /* PaellaTests */,
+				A8CBE22D73EBCC4E5F27B59C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		D8DBA3F9900DD17689CA0C4D /* Paella */ = {
+			isa = PBXGroup;
+			children = (
+				B97F53879370B1587F84EE79 /* main.swift */,
+				3A42B9FEBFFF431E3A7C76BB /* CLI.swift */,
+				FF88B00AF7F1B4BEBB0A539B /* Settings.swift */,
+				8F7A30D8B3A7D72DDC7D3157 /* AppModel.swift */,
+				28F0BA0ED3B348F7521F1EF0 /* MenuBarView.swift */,
+				E5444F3566E12A3458262568 /* SettingsView.swift */,
+				A1C0FFEE0000000000000002 /* Assets.xcassets */,
+			);
+			name = Paella;
+			path = Sources/Paella;
+			sourceTree = "<group>";
+		};
+		0661E103D80A7FA3D82F6BCB /* PaellaTests */ = {
+			isa = PBXGroup;
+			children = (
+				DCC0EBAAE068B1D97629D808 /* ThermalControllerTests.swift */,
+				28CBD8FB86924A00E3E028D9 /* TargetSelectorTests.swift */,
+			);
+			name = PaellaTests;
+			path = Tests/PaellaCoreTests;
+			sourceTree = "<group>";
+		};
+		A8CBE22D73EBCC4E5F27B59C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2A57DC1D883FD21FB995169 /* Paella.app */,
+				47A56294051C69730D11AC40 /* PaellaTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		42AEFBAE01D2DFD981F7DA7D /* Paella */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 27BC56BD685F2762C48B78BA /* Build configuration list for PBXNativeTarget "Paella" */;
+			buildPhases = (
+				0F78FE532035D122ED352DBA /* Sources */,
+				DAF6AA633395B1B76148E35B /* Frameworks */,
+				943E4BBD9B51C81965501BA3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Paella;
+			packageProductDependencies = (
+				71EAE8F71F1D9FF6CCA95F35 /* PaellaCore */,
+			);
+			productName = Paella;
+			productReference = D2A57DC1D883FD21FB995169 /* Paella.app */;
+			productType = "com.apple.product-type.application";
+		};
+		6982AA1890AAE83246A43D56 /* PaellaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A3340B872F337898881EA725 /* Build configuration list for PBXNativeTarget "PaellaTests" */;
+			buildPhases = (
+				C487078F950E5A88E79D57B1 /* Sources */,
+				D2E90322B493B9AE82EC2FF6 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PaellaTests;
+			packageProductDependencies = (
+				493AA130614F3EB1FACCF7E0 /* PaellaCore */,
+			);
+			productName = PaellaTests;
+			productReference = 47A56294051C69730D11AC40 /* PaellaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		46F86FAA6BBF9AC94A7E4595 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2700;
+				LastUpgradeCheck = 2700;
+			};
+			buildConfigurationList = BBF47018EE669135221FC0A7 /* Build configuration list for PBXProject "Paella" */;
+			developmentRegion = es;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				es,
+				Base,
+			);
+			mainGroup = 2B731CEFC6751AAE0EC69B98;
+			packageReferences = (
+				00399ED3B3FA2FCA129B1CCE /* XCLocalSwiftPackageReference "." */,
+			);
+			productRefGroup = A8CBE22D73EBCC4E5F27B59C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				42AEFBAE01D2DFD981F7DA7D /* Paella */,
+				6982AA1890AAE83246A43D56 /* PaellaTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		943E4BBD9B51C81965501BA3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1C0FFEE0000000000000001 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0F78FE532035D122ED352DBA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7D2E8F1A615A1C75D07154BA /* main.swift in Sources */,
+				7380FE1E4A563F37ED194143 /* CLI.swift in Sources */,
+				0845A3C55719678685F35BFF /* Settings.swift in Sources */,
+				B6481E95F245E6FBF037677E /* AppModel.swift in Sources */,
+				CF6113680C8FEE79E8799F1D /* MenuBarView.swift in Sources */,
+				02280F2AE248526A2A428A75 /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C487078F950E5A88E79D57B1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1C430DBB7A80462D009F07B9 /* ThermalControllerTests.swift in Sources */,
+				C47EFB956CCFA6A5F682FA24 /* TargetSelectorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		334F7C4EB9A16718BE95AA75 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		9E54625B130519BC1DA1AA0A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		B44DEBB5BA58B0B2BC96A238 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Paella;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Local build";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.guzman.Paella;
+				PRODUCT_NAME = Paella;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+			};
+			name = Debug;
+		};
+		E945769BF746F4C1E963E847 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = Paella;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_KEY_LSUIElement = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Local build";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.guzman.Paella;
+				PRODUCT_NAME = Paella;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+			};
+			name = Release;
+		};
+		ADF8D10C1FBA999C12F23879 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.guzman.PaellaTests;
+				PRODUCT_NAME = PaellaTests;
+			};
+			name = Debug;
+		};
+		6791BF1F1E8A3A0981023556 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.guzman.PaellaTests;
+				PRODUCT_NAME = PaellaTests;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BBF47018EE669135221FC0A7 /* Build configuration list for PBXProject "Paella" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				334F7C4EB9A16718BE95AA75 /* Debug */,
+				9E54625B130519BC1DA1AA0A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		27BC56BD685F2762C48B78BA /* Build configuration list for PBXNativeTarget "Paella" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B44DEBB5BA58B0B2BC96A238 /* Debug */,
+				E945769BF746F4C1E963E847 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A3340B872F337898881EA725 /* Build configuration list for PBXNativeTarget "PaellaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ADF8D10C1FBA999C12F23879 /* Debug */,
+				6791BF1F1E8A3A0981023556 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		00399ED3B3FA2FCA129B1CCE /* XCLocalSwiftPackageReference "." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = .;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		71EAE8F71F1D9FF6CCA95F35 /* PaellaCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 00399ED3B3FA2FCA129B1CCE /* XCLocalSwiftPackageReference "." */;
+			productName = PaellaCore;
+		};
+		493AA130614F3EB1FACCF7E0 /* PaellaCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 00399ED3B3FA2FCA129B1CCE /* XCLocalSwiftPackageReference "." */;
+			productName = PaellaCore;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+}
