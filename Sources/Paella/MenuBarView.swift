@@ -94,6 +94,7 @@ struct MenuBarView: View {
     @AppStorage(Key.tempUnit) private var tempUnit = "auto" // re-renders when the unit changes
     @State private var menuWindow: NSWindow?
     @State private var rowCapacity = MenuBarView.minRows
+    @State private var hoverTime: Date?
     @AppStorage(Key.refreshInterval) private var refreshInterval = 10.0
 
     var body: some View {
@@ -186,6 +187,12 @@ struct MenuBarView: View {
         return (String(localized: "Nada limitado"), .green)
     }
 
+    /// The history sample nearest the pointer, while hovering either chart.
+    private var hovered: HistoryPoint? {
+        guard let t = hoverTime else { return nil }
+        return model.history.min { abs($0.time.timeIntervalSince(t)) < abs($1.time.timeIntervalSince(t)) }
+    }
+
     private var sparkline: some View {
         VStack(alignment: .leading, spacing: 14) { // room for the edge axis labels of both charts
             Chart {
@@ -198,26 +205,60 @@ struct MenuBarView: View {
                         .foregroundStyle(.red)
                 }
                 RuleMark(y: .value("objetivo", displayTemp(target))).foregroundStyle(.secondary).lineStyle(StrokeStyle(dash: [3, 3]))
+                if let h = hovered {
+                    RuleMark(x: .value("t", h.time)).foregroundStyle(.secondary.opacity(0.6))
+                    PointMark(x: .value("t", h.time), y: .value("°", displayTemp(h.dieMax))).foregroundStyle(.orange).symbolSize(20)
+                    PointMark(x: .value("t", h.time), y: .value("°", displayTemp(h.smoothed))).foregroundStyle(.red).symbolSize(20)
+                }
             }
             .chartXAxis(.hidden)
             .chartYScale(domain: .automatic(includesZero: false))
             .chartYAxis { Self.axis { "\(Int($0)) \(TempUnit.symbol)" } }
+            .chartOverlay(content: hoverTracker)
             .frame(height: 60)
-            .help("Últimos 10 minutos")
             if model.history.contains(where: { $0.power != nil }) {
-                Chart(model.history) { p in
-                    if let w = p.power {
-                        AreaMark(x: .value("t", p.time), y: .value("W", w)).foregroundStyle(.blue.opacity(0.15))
-                        LineMark(x: .value("t", p.time), y: .value("W", w)).foregroundStyle(.blue)
+                Chart {
+                    ForEach(model.history) { p in
+                        if let w = p.power {
+                            AreaMark(x: .value("t", p.time), y: .value("W", w)).foregroundStyle(.blue.opacity(0.15))
+                            LineMark(x: .value("t", p.time), y: .value("W", w)).foregroundStyle(.blue)
+                        }
+                    }
+                    if let h = hovered {
+                        RuleMark(x: .value("t", h.time)).foregroundStyle(.secondary.opacity(0.6))
+                        if let w = h.power { PointMark(x: .value("t", h.time), y: .value("W", w)).foregroundStyle(.blue).symbolSize(20) }
                     }
                 }
                 .chartXAxis(.hidden)
                 .chartYAxis { Self.axis(count: 2) { "\(Int($0)) W" } }
+                .chartOverlay(content: hoverTracker)
                 .frame(height: 36)
-                .help("Potencia del equipo, últimos 10 minutos")
             }
-            legend
+            if let h = hovered { readout(h) } else { legend }
         }
+    }
+
+    /// Maps the pointer to a time on the plot, shared by both charts so their rules move together.
+    private func hoverTracker(_ proxy: ChartProxy) -> some View {
+        GeometryReader { geo in
+            Rectangle().fill(.clear).contentShape(Rectangle())
+                .onContinuousHover { phase in
+                    guard case .active(let loc) = phase, let plot = proxy.plotFrame else { hoverTime = nil; return }
+                    hoverTime = proxy.value(atX: loc.x - geo[plot].minX, as: Date.self)
+                }
+        }
+    }
+
+    /// Replaces the legend while hovering: the values under the pointer, in each line's colour.
+    private func readout(_ p: HistoryPoint) -> some View {
+        HStack(spacing: 12) {
+            Text(p.time, format: .dateTime.hour().minute().second()).foregroundStyle(.secondary)
+            Text(temp(p.smoothed, 1)).foregroundStyle(.red)
+            Text(temp(p.dieMax, 1)).foregroundStyle(.orange)
+            if let w = p.power { Text("\(dec(w, 1)) W").foregroundStyle(.blue) }
+            Spacer(minLength: 0)
+        }
+        .font(.caption2.monospacedDigit())
     }
 
     /// Trailing y-axis with fixed-width labels, so both charts' plot areas line up in time.
