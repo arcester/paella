@@ -71,12 +71,19 @@ final class AppModel {
 
     var lowPowerModeEngaged: Bool { controller.savedLowPowerMode != nil }
 
+    enum Pressure { case none, limiting, atLimit }
+    /// Menu bar traffic light: nothing limited, limiting, or out of room (duty floor or Low Power Mode).
+    var pressure: Pressure {
+        if lowPowerModeEngaged && LowPowerMode.isEnabled { return .atLimit }
+        guard throttling, !targets.isEmpty else { return .none }
+        return duty < 1 && duty <= Settings.current().dutyMin + 0.001 ? .atLimit : .limiting
+    }
+
     var menuLabel: String {
         guard let s = sample else { return "– " + TempUnit.symbol }
         let mode = UserDefaults.standard.string(forKey: Key.menuBarTemp)
         let t = mode == "max" ? s.dieMax : s.dieSmoothed
         var label = mode == "pan" ? "" : temp(t) // "pan": the icon stands in for the number
-        if lowPowerModeEngaged && LowPowerMode.isEnabled { label += " " + String(localized: "Ahorro") } else if throttling && duty < 1 { label += " ▼\(Int((duty * 100).rounded()))%" }
         if s.usingFallback { label += " ⚠︎" }
         return label
     }

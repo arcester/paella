@@ -74,6 +74,8 @@ private struct GeneralSettings: View {
 private struct MenuSettings: View {
     @AppStorage(Key.menuBarTemp) private var menuBarTemp = "smoothed"
     @AppStorage(Key.menuBarPower) private var menuBarPower = true
+    @AppStorage(Key.menuBarIndicator) private var menuBarIndicator = "always"
+    @AppStorage(Key.menuBarWeight) private var menuBarWeight = "regular"
     @AppStorage(Key.autoRefresh) private var autoRefresh = true
     @AppStorage(Key.refreshInterval) private var refreshInterval = 10.0
     @AppStorage(Key.listMinCPU) private var listMinCPU = 0.05
@@ -83,7 +85,7 @@ private struct MenuSettings: View {
     private var menuBarDetail: String {
         switch menuBarTemp {
         case "max": String(localized: "El sensor más caliente en cada momento: reacciona al instante pero salta mucho.")
-        case "pan": String(localized: "Solo la paellera; al limitar procesos se añade el porcentaje de ciclo.")
+        case "pan": String(localized: "Solo la paellera, con el punto de color que indica si se está limitando algo.")
         default: String(localized: "Media del último minuto: es la que usa el control para compararla con el objetivo.")
         }
     }
@@ -102,6 +104,20 @@ private struct MenuSettings: View {
                 Toggle(isOn: $menuBarPower) {
                     Text("Mostrar la potencia debajo")
                     Text("Consumo total del equipo en vatios, según el controlador de la batería.")
+                }
+                Picker(selection: $menuBarIndicator) {
+                    Text("Punto siempre visible").tag("always")
+                    Text("Punto solo al limitar").tag("alert")
+                    Text("Color del texto").tag("text")
+                } label: {
+                    Text("Indicador de limitación")
+                    Text("Verde: nada limitado. Naranja: limitando procesos. Rojo: al límite.")
+                }
+                Picker("Grosor de la fuente", selection: $menuBarWeight) {
+                    Text("Normal").tag("regular")
+                    Text("Media").tag("medium")
+                    Text("Seminegrita").tag("semibold")
+                    Text("Negrita").tag("bold")
                 }
             }
             Section("Lista de procesos") {

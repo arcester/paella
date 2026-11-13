@@ -28,10 +28,12 @@ enum Key {
     static let tempUnit = "temperatureUnit" // "auto" | "c" | "f"
     static let appearance = "appearance" // "system" | "light" | "dark"
     static let menuBarTemp = "menuBarTemperature" // "smoothed" | "max" | "pan"
+    static let menuBarIndicator = "menuBarIndicator" // "always" | "alert" (only when not green) | "text" (coloured values)
+    static let menuBarWeight = "menuBarFontWeight" // "regular" | "medium" | "semibold" | "bold"
     static let savedLPM = "savedLowPowerMode" // user's LPM state while the last-resort stage is engaged
 
     static var defaults: [String: Any] { [
-        enabled: true, autoRefresh: true, refreshInterval: 10.0, listMinCPU: 0.05, listMinGPU: 0.02, listWindow: 10.0, menuBarTemp: "smoothed", tempUnit: "auto", appearance: "system", menuBarPower: true, target: 82.0, dutyMin: 0.3, leaveFrontmost: true, eCoresFirst: true, lpmFallback: false,
+        enabled: true, autoRefresh: true, refreshInterval: 10.0, listMinCPU: 0.05, listMinGPU: 0.02, listWindow: 10.0, menuBarTemp: "smoothed", menuBarIndicator: "always", menuBarWeight: "regular", tempUnit: "auto", appearance: "system", menuBarPower: true, target: 82.0, dutyMin: 0.3, leaveFrontmost: true, eCoresFirst: true, lpmFallback: false,
         exclusions: "", knownGPU: "ollama, LM Studio, python, python3, ffmpeg, HandBrakeCLI",
         kp: ControllerConfig().kp, ki: ControllerConfig().ki, tau: 60.0, period: 0.2,
         cpuThreshold: 0.8, gpuThreshold: 0.2,

@@ -12,6 +12,9 @@
       },
       "shouldTranslate": false
     },
+    "%@ W": {
+      "shouldTranslate": false
+    },
     "%@ antes del objetivo, los procesos pesados pasan a los núcleos de eficiencia. Enfría mucho antes de tener que pausarlos.": {
       "localizations": {
         "de": {
@@ -376,58 +379,6 @@
         }
       }
     },
-    "Ahorro": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stromsparen"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Low Power"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ahorro"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Économie"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Risparmio"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "省電力"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Economia"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "低电量"
-          }
-        }
-      }
-    },
     "Ajustes…": {
       "localizations": {
         "de": {
@@ -476,6 +427,58 @@
           "stringUnit": {
             "state": "translated",
             "value": "设置…"
+          }
+        }
+      }
+    },
+    "Al límite": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Am Limit"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "At the limit"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Al límite"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "À la limite"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Al limite"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上限に到達"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No limite"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已达上限"
           }
         }
       }
@@ -1048,6 +1051,58 @@
           "stringUnit": {
             "state": "translated",
             "value": "浅色"
+          }
+        }
+      }
+    },
+    "Color del texto": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Textfarbe"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text colour"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Color del texto"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Couleur du texte"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Colore del testo"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文字の色"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cor do texto"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文字颜色"
           }
         }
       }
@@ -2040,6 +2095,58 @@
         }
       }
     },
+    "Grosor de la fuente": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schriftstärke"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Font weight"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grosor de la fuente"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Graisse de la police"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spessore del carattere"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "フォントの太さ"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Espessura da fonte"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "字体粗细"
+          }
+        }
+      }
+    },
     "Icono de la barra de menús": {
       "localizations": {
         "de": {
@@ -2244,6 +2351,58 @@
           "stringUnit": {
             "state": "translated",
             "value": "包含（子字符串）"
+          }
+        }
+      }
+    },
+    "Indicador de limitación": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Begrenzungsanzeige"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limiting indicator"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indicador de limitación"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indicateur de limitation"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indicatore di limitazione"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "制限インジケータ"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indicador de limitação"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "限制指示"
           }
         }
       }
@@ -2722,6 +2881,58 @@
         }
       }
     },
+    "Limitando procesos": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prozesse werden begrenzt"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limiting processes"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limitando procesos"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limitation des processus"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limitazione dei processi"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "プロセスを制限中"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Limitando processos"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在限制进程"
+          }
+        }
+      }
+    },
     "Lista de procesos": {
       "localizations": {
         "de": {
@@ -2822,6 +3033,58 @@
           "stringUnit": {
             "state": "translated",
             "value": "进程从不暂停，只会被移到能效核心。"
+          }
+        }
+      }
+    },
+    "Media": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mittel"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Medium"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Media"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Moyenne"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Media"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Média"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中等"
           }
         }
       }
@@ -3554,6 +3817,58 @@
         }
       }
     },
+    "Negrita": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fett"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bold"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Negrita"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gras"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grassetto"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "太字"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Negrito"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "粗体"
+          }
+        }
+      }
+    },
     "Ningún proceso está limitado.\nActiva el control automático para ajustar el objetivo.": {
       "localizations": {
         "de": {
@@ -3706,6 +4021,58 @@
           "stringUnit": {
             "state": "translated",
             "value": "不限制前台应用"
+          }
+        }
+      }
+    },
+    "Normal": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normal"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Regular"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normal"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normale"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normale"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "標準"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normal"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "常规"
           }
         }
       }
@@ -3921,54 +4288,54 @@
         }
       }
     },
-    "Para enfriar sin cerrar nada, la app pausa y reanuda los procesos pesados muchas veces por segundo: en cada ciclo de %lld ms funcionan una parte y están pausados el resto. Esa parte es el ciclo de trabajo, y la app la ajusta sola cada 2 s según la temperatura.\n\nEste ajuste es el suelo: por mucho calor que haga, nunca baja de %@. Solo importa si, incluso en el mínimo, la temperatura sigue por encima del objetivo (verás ▼%@ fijo en la barra de menús).\n\nMás bajo = más frío pero el trabajo tarda más. Más alto = avanza más rápido pero se calienta más. El paso a núcleos de eficiencia se suma a esto, así que la ralentización real puede ser mayor.": {
+    "Para enfriar sin cerrar nada, la app pausa y reanuda los procesos pesados muchas veces por segundo: en cada ciclo de %lld ms funcionan una parte y están pausados el resto. Esa parte es el ciclo de trabajo, y la app la ajusta sola cada 2 s según la temperatura.\n\nEste ajuste es el suelo: por mucho calor que haga, nunca baja de %@. Solo importa si, incluso en el mínimo, la temperatura sigue por encima del objetivo (el punto de la barra de menús se pondrá rojo).\n\nMás bajo = más frío pero el trabajo tarda más. Más alto = avanza más rápido pero se calienta más. El paso a núcleos de eficiencia se suma a esto, así que la ralentización real puede ser mayor.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Um zu kühlen, ohne etwas zu beenden, pausiert die App rechenintensive Prozesse viele Male pro Sekunde und setzt sie fort: In jedem Zyklus von %1$lld ms laufen sie einen Teil der Zeit und pausieren den Rest. Dieser Teil ist der Arbeitszyklus; die App passt ihn alle 2 s an die Temperatur an.\n\nDiese Einstellung ist die Untergrenze: Egal wie heiß es wird, er fällt nie unter %2$@. Sie zählt nur, wenn die Temperatur selbst beim Minimum über dem Zielwert bleibt (dann siehst du dauerhaft ▼%3$@ in der Menüleiste).\n\nNiedriger = kühler, aber die Arbeit dauert länger. Höher = schnellerer Fortschritt, aber mehr Wärme. Der Wechsel auf die Effizienzkerne kommt hinzu, die tatsächliche Verlangsamung kann also größer sein."
+            "value": "Um zu kühlen, ohne etwas zu beenden, pausiert die App rechenintensive Prozesse viele Male pro Sekunde und setzt sie fort: In jedem Zyklus von %1$lld ms laufen sie einen Teil der Zeit und pausieren den Rest. Dieser Teil ist der Arbeitszyklus; die App passt ihn alle 2 s an die Temperatur an.\n\nDiese Einstellung ist die Untergrenze: Egal wie heiß es wird, er fällt nie unter %2$@. Sie zählt nur, wenn die Temperatur selbst beim Minimum über dem Zielwert bleibt (dann wird der Punkt in der Menüleiste rot).\n\nNiedriger = kühler, aber die Arbeit dauert länger. Höher = schnellerer Fortschritt, aber mehr Wärme. Der Wechsel auf die Effizienzkerne kommt hinzu, die tatsächliche Verlangsamung kann also größer sein."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "To cool down without closing anything, the app pauses and resumes heavy processes many times per second: in each %1$lld ms cycle they run for part of it and are paused for the rest. That part is the duty cycle, and the app adjusts it on its own every 2 s based on the temperature.\n\nThis setting is the floor: however hot it gets, it never goes below %2$@. It only matters if, even at the minimum, the temperature stays above the target (you’ll see a steady ▼%3$@ in the menu bar).\n\nLower = cooler but work takes longer. Higher = faster progress but more heat. Moving to the efficiency cores adds to this, so the real slowdown can be larger."
+            "value": "To cool down without closing anything, the app pauses and resumes heavy processes many times per second: in each %1$lld ms cycle they run for part of it and are paused for the rest. That part is the duty cycle, and the app adjusts it on its own every 2 s based on the temperature.\n\nThis setting is the floor: however hot it gets, it never goes below %2$@. It only matters if, even at the minimum, the temperature stays above the target (the dot in the menu bar turns red).\n\nLower = cooler but work takes longer. Higher = faster progress but more heat. Moving to the efficiency cores adds to this, so the real slowdown can be larger."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Para enfriar sin cerrar nada, la app pausa y reanuda los procesos pesados muchas veces por segundo: en cada ciclo de %lld ms funcionan una parte y están pausados el resto. Esa parte es el ciclo de trabajo, y la app la ajusta sola cada 2 s según la temperatura.\n\nEste ajuste es el suelo: por mucho calor que haga, nunca baja de %@. Solo importa si, incluso en el mínimo, la temperatura sigue por encima del objetivo (verás ▼%@ fijo en la barra de menús).\n\nMás bajo = más frío pero el trabajo tarda más. Más alto = avanza más rápido pero se calienta más. El paso a núcleos de eficiencia se suma a esto, así que la ralentización real puede ser mayor."
+            "value": "Para enfriar sin cerrar nada, la app pausa y reanuda los procesos pesados muchas veces por segundo: en cada ciclo de %lld ms funcionan una parte y están pausados el resto. Esa parte es el ciclo de trabajo, y la app la ajusta sola cada 2 s según la temperatura.\n\nEste ajuste es el suelo: por mucho calor que haga, nunca baja de %@. Solo importa si, incluso en el mínimo, la temperatura sigue por encima del objetivo (el punto de la barra de menús se pondrá rojo).\n\nMás bajo = más frío pero el trabajo tarda más. Más alto = avanza más rápido pero se calienta más. El paso a núcleos de eficiencia se suma a esto, así que la ralentización real puede ser mayor."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pour refroidir sans rien fermer, l’app met en pause et relance les processus lourds de nombreuses fois par seconde : à chaque cycle de %1$lld ms, ils tournent une partie du temps et sont en pause le reste. Cette partie est le cycle de service, que l’app ajuste seule toutes les 2 s selon la température.\n\nCe réglage est le plancher : quelle que soit la chaleur, il ne descend jamais sous %2$@. Il ne compte que si, même au minimum, la température reste au-dessus de l’objectif (vous verrez ▼%3$@ en permanence dans la barre des menus).\n\nPlus bas = plus frais mais le travail prend plus de temps. Plus haut = avance plus vite mais chauffe davantage. Le passage aux cœurs à haute efficacité s’y ajoute, le ralentissement réel peut donc être plus important."
+            "value": "Pour refroidir sans rien fermer, l’app met en pause et relance les processus lourds de nombreuses fois par seconde : à chaque cycle de %1$lld ms, ils tournent une partie du temps et sont en pause le reste. Cette partie est le cycle de service, que l’app ajuste seule toutes les 2 s selon la température.\n\nCe réglage est le plancher : quelle que soit la chaleur, il ne descend jamais sous %2$@. Il ne compte que si, même au minimum, la température reste au-dessus de l’objectif (le point de la barre des menus devient rouge).\n\nPlus bas = plus frais mais le travail prend plus de temps. Plus haut = avance plus vite mais chauffe davantage. Le passage aux cœurs à haute efficacité s’y ajoute, le ralentissement réel peut donc être plus important."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Per raffreddare senza chiudere nulla, l’app mette in pausa e riprende i processi pesanti molte volte al secondo: in ogni ciclo di %1$lld ms funzionano per una parte e restano in pausa per il resto. Quella parte è il ciclo di lavoro, che l’app regola da sola ogni 2 s in base alla temperatura.\n\nQuesta impostazione è il minimo: per quanto caldo faccia, non scende mai sotto %2$@. Conta solo se, anche al minimo, la temperatura resta sopra l’obiettivo (vedrai ▼%3$@ fisso nella barra dei menu).\n\nPiù basso = più fresco ma il lavoro richiede più tempo. Più alto = avanza più veloce ma scalda di più. Il passaggio ai core ad alta efficienza si somma, quindi il rallentamento reale può essere maggiore."
+            "value": "Per raffreddare senza chiudere nulla, l’app mette in pausa e riprende i processi pesanti molte volte al secondo: in ogni ciclo di %1$lld ms funzionano per una parte e restano in pausa per il resto. Quella parte è il ciclo di lavoro, che l’app regola da sola ogni 2 s in base alla temperatura.\n\nQuesta impostazione è il minimo: per quanto caldo faccia, non scende mai sotto %2$@. Conta solo se, anche al minimo, la temperatura resta sopra l’obiettivo (il punto nella barra dei menu diventa rosso).\n\nPiù basso = più fresco ma il lavoro richiede più tempo. Più alto = avanza più veloce ma scalda di più. Il passaggio ai core ad alta efficienza si somma, quindi il rallentamento reale può essere maggiore."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "何も終了せずに冷やすため、アプリは重いプロセスを1秒間に何度も一時停止・再開します。%1$lld msの各サイクルのうち一部の時間だけ動かし、残りは停止します。この割合がデューティ比で、アプリは温度に応じて2秒ごとに自動調整します。\n\nこの設定は下限です。どれだけ熱くなっても%2$@を下回りません。最小値でも温度が目標を超え続ける場合にのみ意味があります（メニューバーに▼%3$@が表示され続けます）。\n\n低くすると冷えますが処理に時間がかかります。高くすると速く進みますが熱くなります。高効率コアへの移動も加わるため、実際の減速はさらに大きくなることがあります。"
+            "value": "何も終了せずに冷やすため、アプリは重いプロセスを1秒間に何度も一時停止・再開します。%1$lld msの各サイクルのうち一部の時間だけ動かし、残りは停止します。この割合がデューティ比で、アプリは温度に応じて2秒ごとに自動調整します。\n\nこの設定は下限です。どれだけ熱くなっても%2$@を下回りません。最小値でも温度が目標を超え続ける場合にのみ意味があります（メニューバーの点が赤になります）。\n\n低くすると冷えますが処理に時間がかかります。高くすると速く進みますが熱くなります。高効率コアへの移動も加わるため、実際の減速はさらに大きくなることがあります。"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Para esfriar sem fechar nada, o app pausa e retoma os processos pesados muitas vezes por segundo: em cada ciclo de %1$lld ms eles rodam por uma parte e ficam pausados no resto. Essa parte é o ciclo de trabalho, e o app o ajusta sozinho a cada 2 s conforme a temperatura.\n\nEste ajuste é o piso: por mais calor que faça, nunca fica abaixo de %2$@. Só importa se, mesmo no mínimo, a temperatura continuar acima da meta (você verá ▼%3$@ fixo na barra de menus).\n\nMais baixo = mais frio, mas o trabalho demora mais. Mais alto = avança mais rápido, mas esquenta mais. A passagem para os núcleos de eficiência se soma a isso, então a lentidão real pode ser maior."
+            "value": "Para esfriar sem fechar nada, o app pausa e retoma os processos pesados muitas vezes por segundo: em cada ciclo de %1$lld ms eles rodam por uma parte e ficam pausados no resto. Essa parte é o ciclo de trabalho, e o app o ajusta sozinho a cada 2 s conforme a temperatura.\n\nEste ajuste é o piso: por mais calor que faça, nunca fica abaixo de %2$@. Só importa se, mesmo no mínimo, a temperatura continuar acima da meta (o ponto na barra de menus fica vermelho).\n\nMais baixo = mais frio, mas o trabalho demora mais. Mais alto = avança mais rápido, mas esquenta mais. A passagem para os núcleos de eficiência se soma a isso, então a lentidão real pode ser maior."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "为了在不关闭任何程序的情况下降温，应用每秒多次暂停和恢复繁重的进程：在每个 %1$lld ms 的周期中，它们只运行一部分时间，其余时间暂停。这部分就是占空比，应用会根据温度每 2 秒自动调整。\n\n此设置是下限：无论多热，都不会低于 %2$@。只有在最低值时温度仍高于目标才有影响（菜单栏会持续显示 ▼%3$@）。\n\n越低越凉，但工作耗时更长。越高进展越快，但更热。移到能效核心的效果会叠加，因此实际减速可能更大。"
+            "value": "为了在不关闭任何程序的情况下降温，应用每秒多次暂停和恢复繁重的进程：在每个 %1$lld ms 的周期中，它们只运行一部分时间，其余时间暂停。这部分就是占空比，应用会根据温度每 2 秒自动调整。\n\n此设置是下限：无论多热，都不会低于 %2$@。只有在最低值时温度仍高于目标才有影响（菜单栏中的圆点会变红）。\n\n越低越凉，但工作耗时更长。越高进展越快，但更热。移到能效核心的效果会叠加，因此实际减速可能更大。"
           }
         }
       }
@@ -4389,6 +4756,110 @@
         }
       }
     },
+    "Punto siempre visible": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Punkt, immer"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dot, always"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Punto siempre visible"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Point, toujours"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Punto, sempre"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "常に点を表示"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ponto, sempre"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "始终显示圆点"
+          }
+        }
+      }
+    },
+    "Punto solo al limitar": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Punkt, nur beim Begrenzen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dot, only when limiting"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Punto solo al limitar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Point, seulement en limitant"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Punto, solo quando limita"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "制限中のみ点を表示"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ponto, só ao limitar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仅在限制时显示圆点"
+          }
+        }
+      }
+    },
     "Quitar…": {
       "localizations": {
         "de": {
@@ -4801,6 +5272,58 @@
           "stringUnit": {
             "state": "translated",
             "value": "跟随系统"
+          }
+        }
+      }
+    },
+    "Seminegrita": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Halbfett"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Semibold"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seminegrita"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demi-gras"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Semigrassetto"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "セミボールド"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seminegrito"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "中粗"
           }
         }
       }
@@ -5273,54 +5796,54 @@
         }
       }
     },
-    "Solo la paellera; al limitar procesos se añade el porcentaje de ciclo.": {
+    "Solo la paellera, con el punto de color que indica si se está limitando algo.": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nur die Pfanne; beim Begrenzen wird der Arbeitszyklus in Prozent ergänzt."
+            "value": "Nur die Pfanne, mit dem farbigen Punkt, der zeigt, ob etwas begrenzt wird."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Just the pan; when processes are limited, the duty cycle percentage is added."
+            "value": "Just the pan, with the coloured dot showing whether anything is being limited."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Solo la paellera; al limitar procesos se añade el porcentaje de ciclo."
+            "value": "Solo la paellera, con el punto de color que indica si se está limitando algo."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Seulement la poêle ; quand des processus sont limités, le pourcentage du cycle s’ajoute."
+            "value": "Seulement la poêle, avec le point coloré qui indique si quelque chose est limité."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Solo la padella; quando si limitano processi, si aggiunge la percentuale del ciclo."
+            "value": "Solo la padella, con il punto colorato che indica se qualcosa viene limitato."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "鍋のアイコンのみ。プロセスを制限中はデューティ比の割合も表示します。"
+            "value": "パエリア鍋のみ。色付きの点で何かを制限中かどうかを示します。"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Só a paelheira; ao limitar processos, a porcentagem do ciclo é adicionada."
+            "value": "Só a paellera, com o ponto colorido que indica se algo está sendo limitado."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "仅显示锅；限制进程时会附加占空比百分比。"
+            "value": "仅显示平底锅，彩色圆点表示是否正在限制进程。"
           }
         }
       }
@@ -6049,6 +6572,58 @@
           "stringUnit": {
             "state": "translated",
             "value": "平均 GPU 占用超过此值的进程会显示在列表中"
+          }
+        }
+      }
+    },
+    "Verde: nada limitado. Naranja: limitando procesos. Rojo: al límite.": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grün: nichts begrenzt. Orange: Prozesse werden begrenzt. Rot: am Limit."
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Green: nothing limited. Orange: limiting processes. Red: at the limit."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verde: nada limitado. Naranja: limitando procesos. Rojo: al límite."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vert : rien de limité. Orange : processus limités. Rouge : à la limite."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verde: niente limitato. Arancione: processi limitati. Rosso: al limite."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "緑：制限なし。オレンジ：プロセスを制限中。赤：上限に到達。"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verde: nada limitado. Laranja: limitando processos. Vermelho: no limite."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "绿色：未限制。橙色：正在限制进程。红色：已达上限。"
           }
         }
       }

@@ -6,24 +6,23 @@ struct PaellaApp: App {
     @State private var model = AppModel(dryRun: CommandLine.arguments.contains("--dry-run"))
     @AppStorage(Key.menuBarTemp) private var menuBarIcon = "smoothed"
     @AppStorage(Key.menuBarPower) private var showPower = true
+    @AppStorage(Key.menuBarIndicator) private var indicator = "always"
+    @AppStorage(Key.menuBarWeight) private var weight = "regular"
     @AppStorage(Key.tempUnit) private var tempUnit = "auto" // re-renders the label when the unit changes
 
     var body: some Scene {
         MenuBarExtra {
             MenuBarView(model: model)
         } label: {
-            if menuBarIcon == "pan" {
-                Image(nsImage: .paellaTemplate)
-                    .accessibilityLabel("Paella")
-            }
+            // The menu bar shows only the label's first image, so dot, pan and values are drawn into one.
             let text = model.menuLabel.trimmingCharacters(in: .whitespaces)
-            if showPower, let w = model.power {
-                // The menu bar flattens stacked SwiftUI views, so the two lines are drawn into one image.
-                Image(nsImage: .stacked(text.isEmpty ? nil : text, "\(dec(w)) W"))
-                    .accessibilityLabel("\(text) \(dec(w)) W")
-            } else {
-                Text(text).monospacedDigit()
-            }
+            let power = showPower ? model.power.map { "\(dec($0)) W" } : nil
+            let p = model.pressure
+            Image(nsImage: .menuBarLabel(dot: indicator == "always" || (indicator == "alert" && p != .none) ? p.color : nil,
+                                         color: indicator == "text" && p != .none ? p.color : .labelColor,
+                                         weight: NSFont.Weight(menuBarWeight: weight),
+                                         pan: menuBarIcon == "pan", lines: [text.isEmpty ? nil : text, power].compactMap { $0 }))
+                .accessibilityLabel([model.pressure.label, text, power ?? ""].filter { !$0.isEmpty }.joined(separator: ", "))
         }
         .menuBarExtraStyle(.window)
 
@@ -33,27 +32,76 @@ struct PaellaApp: App {
     }
 }
 
+extension NSFont.Weight {
+    init(menuBarWeight: String) {
+        self = switch menuBarWeight {
+        case "medium": .medium
+        case "semibold": .semibold
+        case "bold": .bold
+        default: .regular
+        }
+    }
+}
+
+extension AppModel.Pressure {
+    var color: NSColor {
+        switch self {
+        case .none: .systemGreen
+        case .limiting: .systemOrange
+        case .atLimit: .systemRed
+        }
+    }
+
+    var label: String {
+        switch self {
+        case .none: String(localized: "Nada limitado")
+        case .limiting: String(localized: "Limitando procesos")
+        case .atLimit: String(localized: "Al límite")
+        }
+    }
+}
+
 extension NSImage {
-    /// Two short lines, one over the other, sized for the menu bar (template, so it follows its color).
-    /// Laid out on cap height, not line height: digits have no descenders, so 11.5 pt fits two lines in 22.
-    static func stacked(_ top: String?, _ bottom: String) -> NSImage {
-        let lines = [top, bottom].compactMap { $0 }
-        let font = NSFont.monospacedDigitSystemFont(ofSize: lines.count == 1 ? 13 : 11.5, weight: .medium)
-        let attrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: NSColor.black]
-        let sizes = lines.map { ($0 as NSString).size(withAttributes: attrs) }
-        let width = ceil(sizes.map(\.width).max() ?? 0)
-        let height: CGFloat = 22, gap: CGFloat = 3
-        let block = font.capHeight * CGFloat(lines.count) + gap * CGFloat(lines.count - 1)
-        let img = NSImage(size: NSSize(width: width, height: height), flipped: true) { _ in
+    /// Menu bar label: traffic-light dot, optional pan, then one or two lines of values.
+    /// Not a template (the dot keeps its colour), so the rest is drawn in labelColor, resolved at draw time
+    /// against the menu bar's own appearance. Lines are laid out on cap height, not line height: digits have
+    /// no descenders, so 11.5 pt fits two lines in 22.
+    static func menuBarLabel(dot: NSColor?, color: NSColor, weight: NSFont.Weight, pan: Bool, lines: [String]) -> NSImage {
+        let font = NSFont.monospacedDigitSystemFont(ofSize: lines.count > 1 ? 11.5 : 13, weight: weight)
+        let measure: [NSAttributedString.Key: Any] = [.font: font]
+        let sizes = lines.map { ($0 as NSString).size(withAttributes: measure) }
+        let textWidth = ceil(sizes.map(\.width).max() ?? 0)
+        let height: CGFloat = 22, gap: CGFloat = 3, dotSize: CGFloat = 7
+        let panWidth = pan ? paellaTemplate.size.width : 0
+        let panX = dot == nil ? 0 : dotSize + 4, textX = panX + (pan ? panWidth + (lines.isEmpty ? 0 : 4) : 0)
+        let block = font.capHeight * CGFloat(lines.count) + gap * CGFloat(max(lines.count - 1, 0))
+        return NSImage(size: NSSize(width: textX + textWidth, height: height), flipped: true) { _ in
+            if let dot {
+                dot.setFill()
+                NSBezierPath(ovalIn: NSRect(x: 0, y: (height - dotSize) / 2, width: dotSize, height: dotSize)).fill()
+            }
+            if pan {
+                let r = NSRect(x: panX, y: (height - paellaTemplate.size.height) / 2, width: panWidth, height: paellaTemplate.size.height)
+                paellaTemplate.tinted(color).draw(in: r)
+            }
+            let attrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color]
             var baseline = (height - block) / 2 + font.capHeight
             for (line, size) in zip(lines, sizes) {
-                (line as NSString).draw(at: NSPoint(x: width - size.width, y: baseline - font.ascender), withAttributes: attrs)
+                (line as NSString).draw(at: NSPoint(x: textX + textWidth - size.width, y: baseline - font.ascender), withAttributes: attrs)
                 baseline += font.capHeight + gap
             }
             return true
         }
-        img.isTemplate = true
-        return img
+    }
+
+    /// A template image filled with `color` (its alpha kept).
+    func tinted(_ color: NSColor) -> NSImage {
+        NSImage(size: size, flipped: false) { [self] rect in
+            draw(in: rect)
+            color.setFill()
+            rect.fill(using: .sourceAtop)
+            return true
+        }
     }
 
     /// Monochrome pan for the menu bar: rim, sloped wall, handles; the rice is a lighter fill.
@@ -368,7 +416,7 @@ struct MenuBarView: View {
         return String(localized: """
         Para enfriar sin cerrar nada, la app pausa y reanuda los procesos pesados muchas veces por segundo: en cada ciclo de \(ms) ms funcionan una parte y están pausados el resto. Esa parte es el ciclo de trabajo, y la app la ajusta sola cada 2 s según la temperatura.
 
-        Este ajuste es el suelo: por mucho calor que haga, nunca baja de \(percent(dutyMin)). Solo importa si, incluso en el mínimo, la temperatura sigue por encima del objetivo (verás ▼\(percent(dutyMin)) fijo en la barra de menús).
+        Este ajuste es el suelo: por mucho calor que haga, nunca baja de \(percent(dutyMin)). Solo importa si, incluso en el mínimo, la temperatura sigue por encima del objetivo (el punto de la barra de menús se pondrá rojo).
 
         Más bajo = más frío pero el trabajo tarda más. Más alto = avanza más rápido pero se calienta más. El paso a núcleos de eficiencia se suma a esto, así que la ralentización real puede ser mayor.
         """)
