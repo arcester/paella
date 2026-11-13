@@ -10,6 +10,7 @@ Low Power Mode. The menu shows temperature, system power, history charts and the
 ## Install
 
 ```sh
+brew trust arcester/tap   # recent Homebrew asks you to trust third-party taps
 brew install --cask arcester/tap/paella
 ```
 
