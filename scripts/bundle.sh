@@ -1,5 +1,5 @@
 #!/bin/bash
-# Builds a release Paella.app into dist/ (ad-hoc signed, no sandbox).
+# Builds a release Paella.app into dist/ (ad-hoc signed unless SIGN_ID is set, no sandbox).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -37,6 +37,8 @@ cat > "$APP/Contents/Info.plist" <<PLIST
 </dict>
 </plist>
 PLIST
-codesign --force --sign - "$APP"
+# SIGN_ID="Developer ID Application: …" for release; default is ad-hoc.
+if [ "${SIGN_ID:--}" = "-" ]; then codesign --force --sign - "$APP"
+else codesign --force --timestamp --options runtime --sign "$SIGN_ID" "$APP"; fi
 codesign --verify --verbose "$APP"
 echo "Built $APP"
