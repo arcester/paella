@@ -81,6 +81,7 @@ private struct MenuSettings: View {
     @AppStorage(Key.listMinCPU) private var listMinCPU = 0.05
     @AppStorage(Key.listMinGPU) private var listMinGPU = 0.02
     @AppStorage(Key.listWindow) private var listWindow = 10.0
+    @AppStorage(Key.listSmoothing) private var listSmoothing = 10.0
 
     private var menuBarDetail: String {
         switch menuBarTemp {
@@ -128,11 +129,13 @@ private struct MenuSettings: View {
                 SliderRow(title: "Cada", detail: "Cada cuánto entran y salen procesos de la lista", value: $refreshInterval,
                           range: Limits.refreshInterval, step: 5) { "\(Int($0)) s" }
                     .disabled(!autoRefresh)
-                SliderRow(title: "Media de", detail: "La lista ordena los procesos por su uso medio en este tiempo, no por el del momento",
+                SliderRow(title: "Suavizado", detail: "Cada cifra es la media de este tiempo: los picos más cortos apenas cuentan",
+                          value: $listSmoothing, range: Limits.listSmoothing, step: 2) { "\(Int($0)) s" }
+                SliderRow(title: "Ventana", detail: "La lista ordena los procesos por el máximo que han alcanzado en este tiempo",
                           value: $listWindow, range: Limits.listWindow, step: 1) { "\(Int($0)) min" }
-                SliderRow(title: "Mínimo de CPU", detail: "Uso medio de CPU a partir del cual un proceso aparece en la lista", value: $listMinCPU,
+                SliderRow(title: "Mínimo de CPU", detail: "Máximo de CPU a partir del cual un proceso aparece en la lista", value: $listMinCPU,
                           range: Limits.listMinCPU, step: 0.01) { String(localized: "\(Int(($0 * 100).rounded())) % de núcleo") }
-                SliderRow(title: "Mínimo de GPU", detail: "Uso medio de GPU a partir del cual un proceso aparece en la lista", value: $listMinGPU,
+                SliderRow(title: "Mínimo de GPU", detail: "Máximo de GPU a partir del cual un proceso aparece en la lista", value: $listMinGPU,
                           range: Limits.listMinGPU, step: 0.01) { "\(Int(($0 * 100).rounded())) %" }
             }
         }

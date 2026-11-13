@@ -12,6 +12,58 @@
       },
       "shouldTranslate": false
     },
+    "%@ (máx. %@)": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ (max. %2$@)"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ (peak %2$@)"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ (máx. %@)"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ (max. %2$@)"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ (max. %2$@)"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@（最大 %2$@）"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ (máx. %2$@)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@（峰值 %2$@）"
+          }
+        }
+      }
+    },
     "%@ W": {
       "shouldTranslate": false
     },
@@ -739,6 +791,58 @@
           "stringUnit": {
             "state": "translated",
             "value": "间隔"
+          }
+        }
+      }
+    },
+    "Cada cifra es la media de este tiempo: los picos más cortos apenas cuentan": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jeder Wert ist der Mittelwert über diese Zeit: kürzere Spitzen zählen kaum"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Each figure is the average over this time: shorter spikes barely count"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cada cifra es la media de este tiempo: los picos más cortos apenas cuentan"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chaque valeur est la moyenne sur cette durée : les pics plus courts comptent à peine"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ogni valore è la media su questo intervallo: i picchi più brevi contano appena"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "各値はこの時間の平均です。これより短いピークはほとんど影響しません"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cada valor é a média desse tempo: picos mais curtos quase não contam"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "每个数值都是这段时间内的平均值：更短的峰值几乎不计"
           }
         }
       }
@@ -2569,54 +2673,54 @@
         }
       }
     },
-    "La lista ordena los procesos por su uso medio en este tiempo, no por el del momento": {
+    "La lista ordena los procesos por el máximo que han alcanzado en este tiempo": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Die Liste sortiert Prozesse nach ihrer mittleren Nutzung in diesem Zeitraum, nicht nach der aktuellen"
+            "value": "Die Liste sortiert Prozesse nach dem Höchstwert, den sie in diesem Zeitraum erreicht haben"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The list ranks processes by their average use over this time, not by their current use"
+            "value": "The list ranks processes by the peak they reached within this time"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "La lista ordena los procesos por su uso medio en este tiempo, no por el del momento"
+            "value": "La lista ordena los procesos por el máximo que han alcanzado en este tiempo"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "La liste classe les processus selon leur utilisation moyenne sur cette durée, pas selon l’instant présent"
+            "value": "La liste classe les processus selon le maximum atteint pendant cette durée"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "L’elenco ordina i processi in base all’uso medio in questo intervallo, non a quello del momento"
+            "value": "L’elenco ordina i processi in base al massimo raggiunto in questo intervallo"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "リストは現在の使用量ではなく、この期間の平均使用量でプロセスを並べます"
+            "value": "リストはこの期間に達した最大値でプロセスを並べます"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "A lista ordena os processos pelo uso médio nesse período, não pelo uso do momento"
+            "value": "A lista ordena os processos pelo máximo que atingiram nesse período"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "列表按此时段内的平均占用排序进程，而不是按当前占用"
+            "value": "列表按进程在此时段内达到的最高值排序"
           }
         }
       }
@@ -3089,58 +3193,6 @@
         }
       }
     },
-    "Media de": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mittel über"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Average over"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Media de"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Moyenne sur"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Media su"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "平均期間"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Média de"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "平均时长"
-          }
-        }
-      }
-    },
     "Media del último minuto: es la que usa el control para compararla con el objetivo.": {
       "localizations": {
         "de": {
@@ -3501,6 +3553,110 @@
           "stringUnit": {
             "state": "translated",
             "value": "芯片最高"
+          }
+        }
+      }
+    },
+    "Máximo de CPU a partir del cual un proceso aparece en la lista": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CPU-Höchstwert, ab dem ein Prozess in der Liste erscheint"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peak CPU use above which a process appears in the list"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Máximo de CPU a partir del cual un proceso aparece en la lista"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maximum de CPU à partir duquel un processus apparaît dans la liste"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Massimo di CPU oltre il quale un processo compare nell’elenco"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "この最大CPU使用率を超えるとプロセスがリストに表示されます"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Máximo de CPU a partir do qual um processo aparece na lista"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "CPU 最高占用超过此值的进程会显示在列表中"
+          }
+        }
+      }
+    },
+    "Máximo de GPU a partir del cual un proceso aparece en la lista": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GPU-Höchstwert, ab dem ein Prozess in der Liste erscheint"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peak GPU use above which a process appears in the list"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Máximo de GPU a partir del cual un proceso aparece en la lista"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maximum de GPU à partir duquel un processus apparaît dans la liste"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Massimo di GPU oltre il quale un processo compare nell’elenco"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "この最大GPU使用率を超えるとプロセスがリストに表示されます"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Máximo de GPU a partir do qual um processo aparece na lista"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GPU 最高占用超过此值的进程会显示在列表中"
           }
         }
       }
@@ -4704,54 +4860,54 @@
         }
       }
     },
-    "Procesos que más exigen · media de %lld min": {
+    "Procesos que más exigen · máx. en %lld min": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Anspruchsvollste · Mittel %lld Min."
+            "value": "Anspruchsvollste · Spitze in %lld Min."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Most demanding · %lld min average"
+            "value": "Most demanding · peak in %lld min"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Procesos que más exigen · media de %lld min"
+            "value": "Procesos que más exigen · máx. en %lld min"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Plus exigeants · moyenne %lld min"
+            "value": "Plus exigeants · max. sur %lld min"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Più esigenti · media %lld min"
+            "value": "Più esigenti · max. in %lld min"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "高負荷プロセス · %lld分平均"
+            "value": "高負荷プロセス · %lld分間の最大"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mais exigentes · média de %lld min"
+            "value": "Mais exigentes · máx. em %lld min"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "最耗资源 · %lld 分钟平均"
+            "value": "最耗资源 · %lld 分钟内峰值"
           }
         }
       }
@@ -5536,58 +5692,6 @@
         }
       }
     },
-    "Sin actividad ahora": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gerade inaktiv"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Idle now"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sin actividad ahora"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inactif pour le moment"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inattivo ora"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "現在アイドル"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Inativo agora"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "当前空闲"
-          }
-        }
-      }
-    },
     "Sin limitar": {
       "localizations": {
         "de": {
@@ -5890,6 +5994,58 @@
           "stringUnit": {
             "state": "translated",
             "value": "Suavizada"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "平滑"
+          }
+        }
+      }
+    },
+    "Suavizado": {
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Glättung"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Smoothing"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suavizado"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lissage"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livellamento"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "平滑化"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suavização"
           }
         },
         "zh-Hans": {
@@ -6472,106 +6628,54 @@
         }
       }
     },
-    "Uso medio de CPU a partir del cual un proceso aparece en la lista": {
+    "Ventana": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Mittlere CPU-Nutzung, ab der ein Prozess in der Liste erscheint"
+            "value": "Zeitraum"
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Average CPU use above which a process appears in the list"
+            "value": "Window"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Uso medio de CPU a partir del cual un proceso aparece en la lista"
+            "value": "Ventana"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Utilisation moyenne du CPU à partir de laquelle un processus apparaît dans la liste"
+            "value": "Fenêtre"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Uso medio della CPU oltre il quale un processo compare nell’elenco"
+            "value": "Finestra"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "この平均CPU使用率を超えるとプロセスがリストに表示されます"
+            "value": "期間"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Uso médio de CPU a partir do qual um processo aparece na lista"
+            "value": "Janela"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "平均 CPU 占用超过此值的进程会显示在列表中"
-          }
-        }
-      }
-    },
-    "Uso medio de GPU a partir del cual un proceso aparece en la lista": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mittlere GPU-Nutzung, ab der ein Prozess in der Liste erscheint"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Average GPU use above which a process appears in the list"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uso medio de GPU a partir del cual un proceso aparece en la lista"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Utilisation moyenne du GPU à partir de laquelle un processus apparaît dans la liste"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uso medio della GPU oltre il quale un processo compare nell’elenco"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "この平均GPU使用率を超えるとプロセスがリストに表示されます"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Uso médio de GPU a partir do qual um processo aparece na lista"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "平均 GPU 占用超过此值的进程会显示在列表中"
+            "value": "时间窗口"
           }
         }
       }
@@ -6701,54 +6805,54 @@
     "°": {
       "shouldTranslate": false
     },
-    "últimos 10 min": {
+    "últimos %lld min": {
       "localizations": {
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "letzte 10 Min."
+            "value": "letzte %lld Min."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "last 10 min"
+            "value": "last %lld min"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "últimos 10 min"
+            "value": "últimos %lld min"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "10 dernières min"
+            "value": "%lld dernières min"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "ultimi 10 min"
+            "value": "ultimi %lld min"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "直近10分"
+            "value": "直近%lld分"
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "últimos 10 min"
+            "value": "últimos %lld min"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "最近 10 分钟"
+            "value": "最近 %lld 分钟"
           }
         }
       }

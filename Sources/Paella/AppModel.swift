@@ -14,12 +14,13 @@ enum ProcessState {
 struct MonitoredGroup: Identifiable {
     let group: TargetGroup
     var state: ProcessState
-    /// Average use over the list window (cores, GPU share): the list ranks and shows these.
+    /// Use smoothed over the last seconds (cores, GPU share), and its highest value within the window.
     var cpu: Double
     var gpu: Double?
-    var demand: Double { cpu + (gpu ?? 0) }
-    /// False when a row kept by the frozen list no longer shows up in the latest scan.
-    var active = true
+    var peakCPU: Double
+    var peakGPU: Double?
+    /// What the list ranks by: the peak.
+    var demand: Double { peakCPU + (peakGPU ?? 0) }
     var id: String { group.key }
 }
 
@@ -51,7 +52,7 @@ final class AppModel {
     }
     private var frozenKeys: [String]?
     private var lastScan: (groups: [TargetGroup], settings: Settings, frontmost: String?)?
-    private var usage = UsageAverager(retention: Limits.listWindow.upperBound * 60)
+    private var usage = UsageAverager(retention: Limits.listWindow.upperBound * 60 + Limits.listSmoothing.upperBound)
     private(set) var throttling = false
     private(set) var duty = 1.0
     private(set) var gpuAvailable = true
@@ -127,7 +128,9 @@ final class AppModel {
         power = SystemPower.watts()
         gpuAvailable = scan.gpuAvailable
         history.append(HistoryPoint(time: Date(), dieMax: sample.dieMax, smoothed: sample.dieSmoothed, power: power))
-        if history.count > 300 { history.removeFirst(history.count - 300) } // 10 min at 2 s
+        // Enough for the longest list window (the chart shows the same span as the process list).
+        let keep = Int(Limits.listWindow.upperBound * 60 / 2)
+        if history.count > keep { history.removeFirst(history.count - keep) }
 
         let groups = TargetSelector.groups(scan.samples)
         let front = s.leaveFrontmost ? NSWorkspace.shared.frontmostApplication?.bundleURL?.path : nil
@@ -186,32 +189,31 @@ final class AppModel {
             return .normal
         }
         let s = scan.settings
-        let current = Set(scan.groups.map(\.key))
-        let averages = usage.averages(window: s.listWindow * 60, now: Date())
-        func row(_ a: UsageAverager.Average) -> MonitoredGroup {
-            MonitoredGroup(group: a.group, state: state(a.group), cpu: a.cpu, gpu: a.gpu, active: current.contains(a.group.key))
+        let averages = usage.usage(smoothing: s.listSmoothing, window: s.listWindow * 60, now: Date())
+        func row(_ a: UsageAverager.Usage) -> MonitoredGroup {
+            MonitoredGroup(group: a.group, state: state(a.group), cpu: a.cpu, gpu: a.gpu, peakCPU: a.peakCPU, peakGPU: a.peakGPU)
         }
         // An empty frozen list (menu opened before the first scan) may fill once, then stays frozen.
         guard let keys = frozenKeys, !keys.isEmpty else {
-            // Ranked by sustained use: the minimums apply to the average; "Ilimitado" rows always stay.
+            // Ranked by the peak of the smoothed use; the minimums apply to it. "Ilimitado" rows always stay.
             let rows = averages.values.map(row).filter {
                 !$0.group.bundles.contains(Bundle.main.bundlePath)
-                    && ($0.cpu > s.listMinCPU || ($0.gpu ?? 0) > s.listMinGPU || $0.state == .unlimited)
+                    && ($0.peakCPU > s.listMinCPU || ($0.peakGPU ?? 0) > s.listMinGPU || $0.state == .unlimited)
             }
             monitored = Array(Self.ordered(rows).prefix(MenuBarView.maxRows))
             if frozenKeys != nil { frozenKeys = monitored.map(\.id) }
             return
         }
-        // Frozen: same rows, fresh averages; a row that left the window keeps its last data.
+        // Frozen: same rows, fresh numbers; a row that left the window keeps its last data, now idle.
         let previous = Dictionary(monitored.map { ($0.id, $0) }, uniquingKeysWith: { a, _ in a })
         // Order too stays as it was at the last refresh: re-sorting every tick moves rows under the pointer.
         monitored = keys.compactMap { k in
             if let a = averages[k] { return row(a) }
-            return previous[k].map { var m = $0; m.state = state(m.group); m.active = false; return m }
+            return previous[k].map { var m = $0; m.state = state(m.group); m.cpu = 0; m.gpu = m.gpu.map { _ in 0 }; return m }
         }
     }
 
-    /// "Ilimitado" rows first, then by average CPU + GPU use.
+    /// "Ilimitado" rows first, then by the peak of smoothed CPU + GPU use.
     private static func ordered(_ rows: [MonitoredGroup]) -> [MonitoredGroup] {
         rows.sorted { a, b in
             let ua = a.state == .unlimited, ub = b.state == .unlimited

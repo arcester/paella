@@ -143,6 +143,7 @@ struct MenuBarView: View {
     @State private var menuWindow: NSWindow?
     @State private var rowCapacity = MenuBarView.minRows
     @State private var hoverTime: Date?
+    @State private var contentHeight: CGFloat = 0
     @AppStorage(Key.refreshInterval) private var refreshInterval = 10.0
     @AppStorage(Key.listWindow) private var listWindow = 10.0
 
@@ -156,7 +157,13 @@ struct MenuBarView: View {
         .padding(14)
         .frame(width: 380)
         .background(WindowVisibility(onChange: { visible in model.menuVisible = visible },
-                                     onWindow: { menuWindow = $0; fitRows() }))
+                                     onWindow: { menuWindow = $0; fitWindow(to: contentHeight); fitRows() }))
+        // The menu window keeps the height it opened with; any later change (rows, the power chart
+        // appearing, a wrapped footer) would be cut off at the bottom, so the window follows the content.
+        .onGeometryChange(for: CGFloat.self) { $0.size.height } action: { h in
+            contentHeight = h
+            fitWindow(to: h)
+        }
         .onChange(of: model.monitored.count) { fitRows() }
     }
 
@@ -219,20 +226,23 @@ struct MenuBarView: View {
 
     private var summary: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .top) {
+            HStack(alignment: .center) {
+                // Digits as tall as the compact switch + pill column beside them (about 35 pt).
                 Text(model.sample.map { temp($0.dieSmoothed, 1) } ?? "–")
-                    .font(.system(size: 28, weight: .semibold)).monospacedDigit()
+                    .font(.system(size: 46, weight: .semibold)).monospacedDigit()
+                    .lineLimit(1).minimumScaleFactor(0.6)
                 Spacer(minLength: 8)
-                VStack(alignment: .trailing, spacing: 6) {
+                VStack(alignment: .trailing, spacing: 3) {
                     Toggle(isOn: $enabled) {
                         Text("Control automático").font(.caption.weight(.semibold)).foregroundStyle(.secondary)
                     }
                     .toggleStyle(.switch)
-                    .controlSize(.small)
+                    .controlSize(.mini)
                     .help("Pasa los procesos pesados a los núcleos de eficiencia y los pausa a intervalos")
                     .onChange(of: enabled) { _, on in if !on { model.resumeAll() } } // release now, not at next tick
                     StateBadge(text: status.text, color: status.color)
                 }
+                .fixedSize() // a labelled switch is flexible and would take the temperature's width
             }
             if model.sample?.usingFallback == true {
                 Label("Sin sensores: temperatura aproximada", systemImage: "exclamationmark.triangle.fill")
@@ -269,20 +279,28 @@ struct MenuBarView: View {
         return (String(localized: "Nada limitado"), .green)
     }
 
+    private var windowMinutes: Int { Int(clamp(listWindow, Limits.listWindow)) }
+
+    /// The charts cover the same span as the process list's window.
+    private var chartHistory: [HistoryPoint] {
+        let start = Date().addingTimeInterval(-Double(windowMinutes) * 60)
+        return model.history.filter { $0.time >= start }
+    }
+
     /// The history sample nearest the pointer, while hovering either chart.
     private var hovered: HistoryPoint? {
         guard let t = hoverTime else { return nil }
-        return model.history.min { abs($0.time.timeIntervalSince(t)) < abs($1.time.timeIntervalSince(t)) }
+        return chartHistory.min { abs($0.time.timeIntervalSince(t)) < abs($1.time.timeIntervalSince(t)) }
     }
 
     private var sparkline: some View {
         VStack(alignment: .leading, spacing: 14) { // room for the edge axis labels of both charts
             Chart {
-                ForEach(model.history) { p in
+                ForEach(chartHistory) { p in
                     LineMark(x: .value("t", p.time), y: .value("°", displayTemp(p.dieMax)), series: .value("s", "máx. chip"))
                         .foregroundStyle(.orange.opacity(0.5))
                 }
-                ForEach(model.history) { p in
+                ForEach(chartHistory) { p in
                     LineMark(x: .value("t", p.time), y: .value("°", displayTemp(p.smoothed)), series: .value("s", "suavizada"))
                         .foregroundStyle(.red)
                 }
@@ -298,9 +316,9 @@ struct MenuBarView: View {
             .chartYAxis { Self.axis { "\(Int($0)) \(TempUnit.symbol)" } }
             .chartOverlay(content: hoverTracker)
             .frame(height: 60)
-            if model.history.contains(where: { $0.power != nil }) {
+            if chartHistory.contains(where: { $0.power != nil }) {
                 Chart {
-                    ForEach(model.history) { p in
+                    ForEach(chartHistory) { p in
                         if let w = p.power {
                             AreaMark(x: .value("t", p.time), y: .value("W", w)).foregroundStyle(.blue.opacity(0.15))
                             LineMark(x: .value("t", p.time), y: .value("W", w)).foregroundStyle(.blue)
@@ -370,7 +388,7 @@ struct MenuBarView: View {
             legendItem("Objetivo", .secondary, dashed: true)
             if model.power != nil { legendItem("Potencia", .blue) }
             Spacer(minLength: 0)
-            if span { Text("últimos 10 min").foregroundStyle(.tertiary).fixedSize() }
+            if span { Text("últimos \(windowMinutes) min").foregroundStyle(.tertiary).fixedSize() }
         }
     }
 
@@ -432,7 +450,7 @@ struct MenuBarView: View {
     private var processList: some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack {
-                SectionCaption("Procesos que más exigen · media de \(Int(clamp(listWindow, Limits.listWindow))) min")
+                SectionCaption("Procesos que más exigen · máx. en \(windowMinutes) min")
                 Spacer()
                 SectionCaption("Ilimitado")
             }
@@ -445,23 +463,24 @@ struct MenuBarView: View {
             ForEach(Array(model.monitored.prefix(rowCapacity).enumerated()), id: \.element.id) { i, m in
                 HStack(spacing: 10) {
                     AppIcon(group: m.group, system: m.state == .system)
+                    // Pill and switch share the name's line, aligned; the figures below get the full width.
                     VStack(alignment: .leading, spacing: 1) {
-                        HStack(spacing: 6) {
+                        HStack(spacing: 8) {
                             Text(m.group.name).fontWeight(.semibold).lineLimit(1)
                                 .foregroundStyle(m.state == .system ? .secondary : .primary)
+                            Spacer(minLength: 0)
                             StateBadge(text: badgeText(m.state), color: badgeColor(m.state))
+                            Toggle("Ilimitado", isOn: Binding(
+                                get: { m.state == .unlimited || m.state == .system }, // system rows are never limited anyway
+                                set: { model.setUnlimited(m.group, $0) }))
+                                .labelsHidden().toggleStyle(.switch).controlSize(.mini)
+                                .disabled(m.state == .system)
+                                .help(m.state == .system ? String(localized: "Componente del sistema: nunca se limita") : String(localized: "Ilimitado: nunca se limitará (se recuerda por nombre)"))
                         }
-                        Text(m.active ? usage(m) : usage(m) + " · " + String(localized: "Sin actividad ahora"))
+                        Text(usage(m))
                             .lineLimit(1)
                             .font(.caption2).foregroundStyle(.tertiary).monospacedDigit()
                     }
-                    Spacer(minLength: 0)
-                    Toggle("Ilimitado", isOn: Binding(
-                        get: { m.state == .unlimited || m.state == .system }, // system rows are never limited anyway
-                        set: { model.setUnlimited(m.group, $0) }))
-                        .labelsHidden().toggleStyle(.switch).controlSize(.mini)
-                        .disabled(m.state == .system)
-                        .help(m.state == .system ? String(localized: "Componente del sistema: nunca se limita") : String(localized: "Ilimitado: nunca se limitará (se recuerda por nombre)"))
                 }
                 .frame(height: Self.rowHeight)
                 .overlay(alignment: .top) { if i > 0 { Divider().padding(.leading, 32) } }
@@ -476,7 +495,9 @@ struct MenuBarView: View {
                 }
             }
             // Room for 6 rows at least; more (up to 12) only when there are processes for them and the screen allows.
-            .frame(height: CGFloat(rowCapacity) * Self.rowStep, alignment: .top)
+            // Full width even when empty: the placeholder text alone would make the box only as wide as itself.
+            .frame(maxWidth: .infinity, minHeight: CGFloat(rowCapacity) * Self.rowStep,
+                   maxHeight: CGFloat(rowCapacity) * Self.rowStep, alignment: .topLeading)
             .clipped() // while rows cross-fade, leaving and arriving rows are both laid out: up to 12 for a moment
             .padding(.horizontal, 12)
             .outlinedBox()
@@ -488,27 +509,40 @@ struct MenuBarView: View {
     }
 
     /// Grows or shrinks the list to fit the processes, within what the screen below the menu bar allows.
-    /// The menu window doesn't follow content size, so it is resized here, top edge fixed, in step with the rows.
+    /// Only the row count changes here; fitWindow then resizes the menu window to the new content height.
     private func fitRows() {
-        guard let w = menuWindow, let screen = w.screen else { return }
-        let f = w.frame
-        let heightAtMin = f.height - CGFloat(rowCapacity - Self.minRows) * Self.rowStep
-        let room = f.maxY - screen.visibleFrame.minY - 12 - heightAtMin
+        guard let w = menuWindow, let screen = w.screen, contentHeight > 0 else { return }
+        let heightAtMin = contentHeight - CGFloat(rowCapacity - Self.minRows) * Self.rowStep
+        let room = w.frame.maxY - screen.visibleFrame.minY - 12 - heightAtMin
         let fit = Self.minRows + max(0, Int(room / Self.rowStep))
         let rows = min(max(model.monitored.count, Self.minRows), fit, Self.maxRows)
         guard rows != rowCapacity else { return }
-        let height = f.height + CGFloat(rows - rowCapacity) * Self.rowStep
-        withAnimation(.easeInOut(duration: 0.8)) { rowCapacity = rows }
+        withAnimation(.easeInOut(duration: 0.8)) { rowCapacity = rows } // the window follows via fitWindow
+    }
+
+    /// Resizes the menu window to `height` of content, top edge fixed, in step with the rows' animation.
+    private func fitWindow(to height: CGFloat) {
+        guard let w = menuWindow, height > 0 else { return }
+        let f = w.frame
+        let target = w.frameRect(forContentRect: NSRect(x: 0, y: 0, width: w.contentRect(forFrameRect: f).width, height: height)).height
+        guard abs(target - f.height) > 0.5 else { return }
         NSAnimationContext.runAnimationGroup { ctx in
             ctx.duration = 0.8
             ctx.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-            w.animator().setFrame(NSRect(x: f.minX, y: f.maxY - height, width: f.width, height: height), display: true)
+            w.animator().setFrame(NSRect(x: f.minX, y: f.maxY - target, width: f.width, height: target), display: true)
+        } completionHandler: {
+            // AppKit runs this on the main thread. The shadow keeps the old outline otherwise.
+            MainActor.assumeIsolated { w.invalidateShadow() }
         }
     }
 
+    /// "CPU 85 % (máx. 310 %) · GPU 4 % (máx. 12 %)": smoothed use now, and its peak in the window.
+    /// GPU only when it reached 1 %, to keep the line short.
     private func usage(_ m: MonitoredGroup) -> String {
-        let gpu = m.gpu.map { String(format: " · GPU %.0f %%", $0 * 100) } ?? ""
-        return String(format: "CPU %.0f %%", m.cpu * 100) + gpu
+        func pair(_ now: Double, _ peak: Double) -> String { String(localized: "\(percent(now)) (máx. \(percent(peak)))") }
+        let cpu = "CPU " + pair(m.cpu, m.peakCPU)
+        guard let peakGPU = m.peakGPU, peakGPU >= 0.01 else { return cpu }
+        return cpu + " · GPU " + pair(m.gpu ?? 0, peakGPU)
     }
 
     private func badgeText(_ s: ProcessState) -> String {

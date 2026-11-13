@@ -7,22 +7,27 @@ private func group(_ path: String, cpu: Double) -> TargetGroup {
                                          path: path, cpu: cpu, gpu: nil)])[0]
 }
 
-@Test func averagesCountAbsentTicksAsZeroAndForgetOldOnes() {
-    var avg = UsageAverager(retention: 60)
+@Test func peaksOfTheSmoothedUseRankSustainedWorkOverSpikes() {
+    var avg = UsageAverager(retention: 700)
     let t0 = Date(timeIntervalSince1970: 1000)
-    let burst = group("/Applications/Burst.app/Contents/MacOS/Burst", cpu: 4)
-    let steady = group("/Applications/Steady.app/Contents/MacOS/Steady", cpu: 1)
-    // A 2 s burst of 4 cores, then 3 ticks without it; Steady uses 1 core all along.
-    avg.record([burst, steady], at: t0)
-    for i in 1...3 { avg.record([steady], at: t0.addingTimeInterval(Double(i) * 2)) }
-    let now = t0.addingTimeInterval(6)
-    let a = avg.averages(window: 60, now: now)
-    #expect(a[burst.key]?.cpu == 1) // 4 / 4 ticks
-    #expect(a[steady.key]?.cpu == 1)
-    #expect(a[burst.key]?.gpu == nil)
-    // A shorter window no longer sees the burst.
-    #expect(avg.averages(window: 5, now: now)[burst.key] == nil)
-    // Past retention, the burst is dropped entirely.
-    avg.record([steady], at: t0.addingTimeInterval(120))
-    #expect(avg.averages(window: 600, now: t0.addingTimeInterval(120))[burst.key] == nil)
+    let spike = { group("/Applications/Spike.app/Contents/MacOS/Spike", cpu: $0) }
+    let busy = { group("/Applications/Busy.app/Contents/MacOS/Busy", cpu: $0) }
+    // Ticks every 2 s. Spike: one 2 s tick at 4 cores. Busy: 20 s at 2 cores, then idle.
+    for i in 0..<60 {
+        var groups: [TargetGroup] = []
+        if i == 5 { groups.append(spike(4)) }
+        if (10..<20).contains(i) { groups.append(busy(2)) }
+        avg.record(groups, at: t0.addingTimeInterval(Double(i) * 2))
+    }
+    let now = t0.addingTimeInterval(118)
+    let u = avg.usage(smoothing: 10, window: 600, now: now)
+    // 10 s = 5 ticks: the spike is diluted to 4 / 5, the sustained load keeps its 2 cores.
+    #expect(abs(u[spike(0).key]!.peakCPU - 0.8) < 1e-9)
+    #expect(abs(u[busy(0).key]!.peakCPU - 2) < 1e-9)
+    #expect(u[busy(0).key]!.peakDemand > u[spike(0).key]!.peakDemand)
+    // Both are idle now.
+    #expect(u[busy(0).key]!.cpu == 0)
+    #expect(u[busy(0).key]!.gpu == nil)
+    // A window that starts after the burst no longer sees it.
+    #expect((avg.usage(smoothing: 10, window: 30, now: now)[busy(0).key]?.peakCPU ?? 0) == 0)
 }
