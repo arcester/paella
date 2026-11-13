@@ -14,7 +14,7 @@ brew install --cask arcester/tap/paella
 ```
 
 Or download the notarized `Paella-<version>.zip` from
-[Releases](https://github.com/arcester/Paella/releases) and move `Paella.app` to Applications.
+[Releases](https://github.com/arcester/paella/releases) and move `Paella.app` to Applications.
 
 ## Permissions
 
