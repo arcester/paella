@@ -10,9 +10,12 @@ Low Power Mode. The menu shows temperature, system power, history charts and the
 ## Install
 
 ```sh
-brew trust arcester/tap   # recent Homebrew asks you to trust third-party taps
-brew install --cask arcester/tap/paella
+brew trust arcester/tap && brew install --cask arcester/tap/paella
 ```
+
+`brew trust` lets Homebrew install apps from this tap (recent Homebrew versions require it for
+third-party taps). The first time you open Paella, macOS asks whether you want to open an app
+downloaded from the internet: click **Open**. Paella is notarized by Apple, so you only see this once.
 
 Or download the notarized `Paella-<version>.zip` from
 [Releases](https://github.com/arcester/paella/releases) and move `Paella.app` to Applications.
