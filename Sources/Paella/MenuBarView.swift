@@ -70,7 +70,9 @@ extension NSImage {
         let font = NSFont.monospacedDigitSystemFont(ofSize: lines.count > 1 ? 11.5 : 13, weight: weight)
         let measure: [NSAttributedString.Key: Any] = [.font: font]
         let sizes = lines.map { ($0 as NSString).size(withAttributes: measure) }
-        let textWidth = ceil(sizes.map(\.width).max() ?? 0)
+        // Width as if each number had ≥2 integer digits, so "9,8 W" → "10,2 W" doesn't resize the status item.
+        let padded = lines.map { $0.prefix(while: \.isNumber).count == 1 ? "0" + $0 : $0 } // values lead each line
+        let textWidth = ceil(padded.map { ($0 as NSString).size(withAttributes: measure).width }.max() ?? 0)
         let height: CGFloat = 22, gap: CGFloat = 3, dotSize: CGFloat = 7
         let panWidth = pan ? paellaTemplate.size.width : 0
         let panX = dot == nil ? 0 : dotSize + 4, textX = panX + (pan ? panWidth + (lines.isEmpty ? 0 : 4) : 0)
